@@ -1,0 +1,46 @@
+server:
+  port: 9100
+
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: breakblog
+    url: jdbc:mysql://106.53.155.82:3306/dogchat?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    platform: mysql
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+  redis:
+    host: 106.53.155.82
+    password: breakblog
+    port: 6379
+    database: 3
+    timeout: 5000
+    lettuce:
+      pool:
+        min-idle: 1
+        max-idle: 5
+        max-wait: -1
+        max-active: 10
+
+  servlet:
+    multipart:
+      #开启文件上传
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+mybatis-plus:
+  mapper-locations: classpath*:me/twhuang/dogchat/mapper/xml/*Mapper.xml
+  type-aliases-package: me.twhuang.dogchat.entity
+  global-config:
+    banner: false
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
