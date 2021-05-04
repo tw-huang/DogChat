@@ -1,8 +1,12 @@
 package me.twhuang.dogchat.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
@@ -15,6 +19,7 @@ import java.util.Date;
 @Data
 public class Message {
 
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     private Boolean delFlag;
@@ -25,6 +30,7 @@ public class Message {
 
     private Date pushTime;
 
+    @NotBlank(message = "发表内容不能为空")
     private String body;
 
 }

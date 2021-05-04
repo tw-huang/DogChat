@@ -3,6 +3,7 @@ package me.twhuang.dogchat.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import me.twhuang.dogchat.entity.Message;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Component;
 
 /**
  * @Description: TODO
