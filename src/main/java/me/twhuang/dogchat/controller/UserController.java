@@ -1,7 +1,6 @@
 package me.twhuang.dogchat.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import lombok.AllArgsConstructor;
 import me.twhuang.dogchat.dto.SignInDTO;
 import me.twhuang.dogchat.entity.User;
@@ -9,10 +8,12 @@ import me.twhuang.dogchat.mapper.UserMapper;
 import me.twhuang.dogchat.util.JwtUtil;
 import me.twhuang.dogchat.util.PasswordUtil;
 import me.twhuang.dogchat.util.Result;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Objects;
@@ -43,16 +44,23 @@ public class UserController {
     public Result signIn(@Valid @RequestBody SignInDTO signInDTO) {
         User user = this.userMapper.selectOne(new QueryWrapper<User>().lambda()
                 .eq(User::getEmail, signInDTO.getEmail()));
-        if (Objects.isNull(user)){
+        if (Objects.isNull(user)) {
             return Result.failure("该邮箱还没注册");
         }
-        if (PasswordUtil.encryptPassword(signInDTO.getPassword(),user.getSalt()).equals(user.getPassword())){
+        if (PasswordUtil.encryptPassword(signInDTO.getPassword(), user.getSalt()).equals(user.getPassword())) {
             HashMap<String, String> map = new HashMap<>(1);
             String token = JwtUtil.createToken(user);
-            map.put("token",token);
-            return Result.success(map,"登录成功");
+            map.put("token", token);
+            return Result.success(map, "登录成功");
         }
         return Result.failure("密码错误");
+    }
+
+    @GetMapping("/api/user")
+    public Result user(HttpServletRequest request) {
+        Long userId = JwtUtil.getUserId(request);
+        User user = this.userMapper.selectById(userId);
+        return Result.success(user, "用户信息");
     }
 
 }

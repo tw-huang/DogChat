@@ -18,11 +18,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        // 跨域拦截器需放在最上面
-//        registry.addInterceptor(corsInterceptor).addPathPatterns("/**");
-//        // Token拦截器
-//        registry.addInterceptor(tokenInterceptor).addPathPatterns("/api/**")
-//                .excludePathPatterns("/api/user/signUp")
-//                .excludePathPatterns("/api/user/signIn");
+        // 跨域拦截器需放在最上面
+        registry.addInterceptor(corsInterceptor).addPathPatterns("/**");
+        // Token拦截器
+        registry.addInterceptor(tokenInterceptor).addPathPatterns("/api/**")
+                .excludePathPatterns("/api/user/signUp")
+                .excludePathPatterns("/api/user/signIn");
     }
 }

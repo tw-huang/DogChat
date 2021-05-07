@@ -1,7 +1,6 @@
 package me.twhuang.dogchat.controller;
 
 import com.alibaba.fastjson.JSON;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.twhuang.dogchat.entity.Message;
 import me.twhuang.dogchat.entity.User;

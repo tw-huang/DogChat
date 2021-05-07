@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>DogChat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" th:href="@{/image/logo.png}">
+    <link rel="stylesheet" th:href="@{/css/packed.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.1/dist/semantic.min.css">
+</head>
+
+<body>
+
+<div class="ui labeled icon right vertical inverted demo menu sidebar">
+    <a class="item" href="http://catchat.helloflask.com/anonymous">
+        <i class="user secret icon"></i>
+        Incognito Mode
+    </a>
+    <a class="item" href="http://helloflask.com/" target="_blank">
+        <i class="home icon"></i>
+        HelloFlask.com
+    </a>
+    <a class="item" href="https://github.com/greyli/catchat" target="_blank">
+        <i class="github icon"></i>
+        Github
+    </a>
+
+    <a class="item" href="http://catchat.helloflask.com/profile">
+        <i class="setting icon"></i>
+        Profile
+    </a>
+
+    <a class="item" id="show-help-modal">
+        <i class="help icon"></i>
+        Help
+    </a>
+
+    <a class="item" href="http://catchat.helloflask.com/logout">
+        <i class="power off icon"></i>
+        Sign out</a>
+
+</div>
+
+<div class="ui top fixed borderless menu">
+    <a class="item catchat" href="http://catchat.helloflask.com/">
+        <img th:src="@{/image/logo.png}">
+        <span>CatChat</span>
+    </a>
+    <div class="item">
+        <div class="ui label black basic" title="Online users">
+            <i class="user icon"></i> <span id="user-count">1</span> / 638
+        </div>
+    </div>
+    <a class="item" id="show-about-modal">About</a>
+    <div class="right menu hide-on-mobile">
+
+        <div class="item">
+            <button class="ui button orange basic" id="show-snippet-modal">Create Snippets</button>
+        </div>
+
+        <a class="item" id="toggle-sidebar">
+            <i class="sidebar icon"></i>
+        </a>
+    </div>
+</div>
+
+<!-- Help Modal -->
+<div class="ui modal small help">
+    <div class="header">Markdown Help</div>
+    <div class="content">
+        <section class="modal--default__content" id="modal-body-region">
+            <div>
+                <div class="modal-content">
+                    <table class="ui celled striped table">
+                        <tbody>
+                        <tr>
+                            <td><strong>Bold</strong></td>
+                            <td>**bold**</td>
+                        </tr>
+                        <tr>
+                            <td><i>Italics</i></td>
+                            <td>*italics*</td>
+                        </tr>
+                        <tr>
+                            <td>Header</td>
+                            <td># H1 ## H2 ### H3</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <li>item</li>
+                            </td>
+                            <td>* item</td>
+                        </tr>
+                        <tr>
+                            <td>Blockquote</td>
+                            <td>&gt; blockquote</td>
+                        </tr>
+                        <tr>
+                            <td><a href="http://greyli.com/" target="_blank">Link</a></td>
+                            <td>[title](http://...)</td>
+                        </tr>
+                        <tr>
+                            <td>Image</td>
+                            <td>![alt](http://...)</td>
+                        </tr>
+                        <tr>
+                            <td><code>code</code></td>
+                            <td>`code`</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="codehilite">
+                                            <pre><span></span><span class="k">def</span> <span
+                                                    class="nf">hello</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s2">"Hello World"</span>
+</pre>
+                                </div>
+                            </td>
+                            <td style="line-height: 100%">```python <i
+                                    style="color: rgba(0,0,0,0.5)">(shift+enter for
+                                line
+                                break)</i><br>def hello():<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;return "Hello World"<br>```
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+
+            </div>
+        </section>
+    </div>
+    <div class="actions">
+        <button class="ui button cancel">Close</button>
+    </div>
+</div>
+
+<!-- Snippet Modal -->
+<div class="ui modal small snippet">
+    <div class="header">Create code or text snippets</div>
+    <div class="content">
+        <div class="ui form">
+            <textarea id="snippet-textarea" rows="20"></textarea>
+        </div>
+    </div>
+    <div class="actions">
+        <button class="ui button cancel">Cancel</button>
+        <button class="ui button orange">Help</button>
+        <button class="ui button blue approve" id="snippet-button">Create</button>
+    </div>
+</div>
+
+
+<!-- About Modal -->
+<div class="ui modal small about">
+    <div class="header">About</div>
+    <div class="content">
+        <p>Hello，这是<a href="http://helloflask.com/book">《Flask Web开发实战》</a>第11章配套程序CatChat的在线Demo，请访问<a
+                href="http://helloflask.com/book">helloflask.com/book</a>了解更多信息。请注意，网站数据不会永久保存，网站也可能随时会关闭。这个程序的源码可以在<a
+                href="https://github.com/greyli/catchat">GitHub</a>上获取。</p>
+
+        <p>如果你想让这个示例程序持续运行，可以考虑买一本<a href="http://helloflask.com/book">《Flask Web开发实战》</a>，或是通过<a
+                href="http://greyli.com/support">其他方式</a>支持我。</p>
+
+        <p>你可以在<a href="http://helloflask.com/">HelloFlask.com</a>看到更多Flask程序。</p>
+        <hr>
+
+        <p>This is the companion application's demo to my book "Python Web Development with Flask", see more
+            information on <a href="http://helloflask.com/en/book"
+                              target="_blank">http://helloflask.com/en/book</a>.</p>
+    </div>
+    <div class="actions">
+        <button class="ui button cancel">Close</button>
+    </div>
+</div>
+
+<!-- Mobile message Modal -->
+<div id="mobile-new-message-modal" class="ui modal small">
+    <div class="content">
+        <div class="ui form">
+            <textarea id="mobile-message-textarea" rows="15"></textarea>
+        </div>
+    </div>
+    <div class="actions">
+        <button class="ui button cancel">Cancel</button>
+        <button class="ui button orange approve" id="send-button">Send</button>
+    </div>
+</div>
+
+
+<div class="pusher">
+    <div class="chat-box">
+        <div class="messages">
+            <div class="ui horizontal divider">
+            </div>
+            <div class="ui text loader">Loading messages...</div>
+            <div class="msg-box">
+                <div class="picture">
+                    <img class="pop-card" data-position="right center" data-offset="-40" data-href="/profile/637"
+                         th:src="@{/image/user.png}">
+                </div>
+                <div class="msg">
+                    <span class="nickname">break</span>
+                    <small class="timestamp"><span class="" data-timestamp="2021-05-04T20:27:50Z"
+                                                   data-format="format(&#39;lll&#39;)" data-refresh="0" style="">May 5, 2021 4:27
+                                AM</span></small>
+                    <span class="message-body">
+                            <p>test</p>
+                        </span>
+                </div>
+
+                <div class="ui icon left center pointing dropdown ellipsis-icon" tabindex="0">
+                    <i class="ellipsis horizontal icon"></i>
+                    <div class="menu" data-offset="-33" tabindex="-1">
+                        <div class="item quote-button"><i class="quote left icon"></i> Quote</div>
+
+                        <div class="item delete-button" data-href="/message/delete/3170"
+                             onclick="confirm(&#39;Are you sure?&#39;)"><i class="delete icon"></i> Delete
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="msg-box">
+                <div class="picture">
+                    <img class="pop-card" data-position="right center" data-offset="-40" data-href="/profile/637"
+                         th:src="@{/image/user.png}">
+                </div>
+                <div class="msg">
+                    <span class="nickname">break</span>
+                    <small class="timestamp"><span class="" data-timestamp="2021-05-04T21:29:41Z"
+                                                   data-format="format(&#39;lll&#39;)" data-refresh="0" style="">May 5, 2021 5:29
+                                AM</span></small>
+                    <span class="message-body">
+                            <blockquote>
+                                <p>你好</p>
+                            </blockquote>
+                            <p>你</p>
+                        </span>
+                </div>
+
+                <div class="ui icon left center pointing dropdown ellipsis-icon" tabindex="0">
+                    <i class="ellipsis horizontal icon"></i>
+                    <div class="menu" data-offset="-33" tabindex="-1">
+                        <div class="item quote-button"><i class="quote left icon"></i> Quote</div>
+
+                        <div class="item delete-button" data-href="/message/delete/3171"
+                             onclick="confirm(&#39;Are you sure?&#39;)"><i class="delete icon"></i> Delete
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="input-area">
+        <div class="ui grid form">
+            <div class="ten wide column">
+                <div class="field fluid message-box">
+                    <img class="pop-card input-avatar" data-position="bottom left" data-href="/profile/637"
+                         th:src="@{/image/user.png}">
+                    <textarea rows="2" id="message-textarea"
+                              placeholder="Write your message here... Enter to send"></textarea>
+                </div>
+            </div>
+            <div class="four wide column right floated right aligned hide-on-mobile">
+                <p>Written by <a href="http://greyli.com/">tw.huang</a><br>
+                    2021 © <a href="http://www.twhuang.me:9000/">BreakBlog</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.1/dist/semantic.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/socket.io-client@2.1.1/dist/socket.io.min.js"></script>-->
+<script type="text/javascript" th:src="@{/js/packed.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
+
+</body>
+</html>
