@@ -27,4 +27,8 @@ public class IndexController {
         return "register";
     }
 
+    @GetMapping(value = "/profile")
+    public String profile() {
+        return "profile";
+    }
 }

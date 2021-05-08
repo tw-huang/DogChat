@@ -12,32 +12,28 @@
 <body>
 
 <div class="ui labeled icon right vertical inverted demo menu sidebar">
-    <a class="item" href="http://catchat.helloflask.com/anonymous">
-        <i class="user secret icon"></i>
-        Incognito Mode
-    </a>
-    <a class="item" href="http://helloflask.com/" target="_blank">
+    <a class="item" href="http://www.twhuang.me:9000/" target="_blank">
         <i class="home icon"></i>
-        HelloFlask.com
+        BreakBlog
     </a>
-    <a class="item" href="https://github.com/greyli/catchat" target="_blank">
+    <a class="item" href="https://github.com/tw-huang" target="_blank">
         <i class="github icon"></i>
         Github
     </a>
 
-    <a class="item" href="http://catchat.helloflask.com/profile">
+    <a class="item" th:href="@{/profile}">
         <i class="setting icon"></i>
-        Profile
+        个人设置
     </a>
 
     <a class="item" id="show-help-modal">
         <i class="help icon"></i>
-        Help
+        帮 助
     </a>
 
     <a class="item" href="http://catchat.helloflask.com/logout">
         <i class="power off icon"></i>
-        Sign out</a>
+        退 出</a>
 
 </div>
 
