@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>DogChat - 登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" th:href="@{/image/logo.png}">
+    <link rel="stylesheet" th:href="@{/css/packed.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.1/dist/semantic.min.css">
+</head>
+
+<body>
+
+<a th:href="@{/register}">
+    <div class="ui primary button signup-btn">注 册</div>
+</a>
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <h2 class="ui orange image header">
+            <img th:src="@{/image/logo.png}" class="image" alt="logo">
+            <div class="content">
+                登 录 DogChat
+            </div>
+        </h2>
+
+        <form class="login ui large form" method="post" action="/login">
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input id="email-input" name="email" placeholder="登录邮箱" type="text">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input id="password-input" name="password" placeholder="密码" type="password">
+                    </div>
+                </div>
+                <div class="ui fluid large orange submit button">登录</div>
+            </div>
+            <div class="ui error message"></div>
+        </form>
+
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.1/dist/semantic.min.js"></script>
+</body>
+</html>

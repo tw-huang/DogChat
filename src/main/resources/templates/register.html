@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>DogChat - 注册</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" th:href="@{/image/logo.png}">
+    <link rel="stylesheet" th:href="@{/css/packed.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.1/dist/semantic.min.css">
+</head>
+
+<body>
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <div class="ui attached message">
+            <div class="header ui image ">
+                <img th:src="@{/image/logo.png}" class="image" alt="logo">
+                <div class="content">
+                    欢迎注册 <span class="catchat-text">DogCaht</span>
+                </div>
+            </div>
+        </div>
+        <form class="register ui form attached left aligned fluid segment" method="post" action="/register">
+            <div class="field">
+                <label>昵 称</label>
+                <input name="nickname" placeholder="昵 称" type="text">
+            </div>
+            <div class="field">
+                <label>邮 箱</label>
+
+                <input name="email" placeholder="tw.huang@foxmail.com" type="text">
+            </div>
+            <div class="field">
+                <label>密 码</label>
+                <input name="password" placeholder="password" type="password">
+            </div>
+            <div class="field">
+                <label>确认密码</label>
+                <input name="password2" placeholder="password" type="password">
+            </div>
+            <div class="ui orange submit button fluid">注册</div>
+            <div class="ui error message"></div>
+        </form>
+        <div class="ui bottom attached warning message">
+            已注册<i class="icon help"></i><a href="/login">点击这里</a> 登录
+        </div>
+        
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.1/dist/semantic.min.js"></script>
+</body>
+</html>
