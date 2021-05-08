@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <form class="register ui form attached left aligned fluid segment" method="post" action="/register">
+        <form class="register ui form attached left aligned fluid segment" id="registerForm">
             <div class="field">
                 <label>昵 称</label>
                 <input name="nickname" placeholder="昵 称" type="text">
@@ -38,18 +38,18 @@
                 <label>确认密码</label>
                 <input name="password2" placeholder="password" type="password">
             </div>
-            <div class="ui orange submit button fluid">注册</div>
+            <div class="ui orange submit button fluid" id="registerSubmit">注册</div>
             <div class="ui error message"></div>
         </form>
         <div class="ui bottom attached warning message">
             已注册<i class="icon help"></i><a href="/login">点击这里</a> 登录
         </div>
-        
     </div>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.1/dist/semantic.min.js"></script>
+<script type="text/javascript" th:src="@{/js/packed.js}"></script>
 </body>
 </html>

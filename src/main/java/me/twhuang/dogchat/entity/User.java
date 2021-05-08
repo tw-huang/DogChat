@@ -23,12 +23,13 @@ public class User {
     private Long id;
 
     @NotEmpty(message = "昵称不能为空")
+    @Size(max = 20,message = "昵称不能超过20个字符")
     private String nickname;
 
     private String avatar;
 
     @NotEmpty(message = "密码不能为空")
-    @Size(min = 8,max = 20,message = "密码长度为6-20位")
+    @Size(min = 6,max = 20,message = "密码长度为6-20位")
     @JsonIgnore
     private String password;
 

@@ -1,5 +1,7 @@
-$(document).ready(function () {
+const baseUrl = "http://localhost:9001";
 
+$(document).ready(function () {
+    var popupLoading = '<i class="notched circle loading icon green"></i> loading...';
 
     //激活动态菜单
     function activateSemantics() {
@@ -50,3 +52,76 @@ $(document).ready(function () {
     //初始化入口
     init();
 });
+
+$(document).ready(function () {
+    $('.register.ui.form').form({
+        inline: true,
+        fields: {
+            nickname: {
+                identifier: 'nickname',
+                rules: [{type: 'empty', prompt: '请输入昵称'}, {
+                    type: 'maxLength[20]',
+                    prompt: '昵称不能超过20个字符'
+                }]
+            },
+            email: {
+                identifier: 'email',
+                rules: [{type: 'empty', prompt: '请输入邮箱地址'}, {
+                    type: 'email',
+                    prompt: '请检查邮箱格式'
+                }]
+            },
+            password: {
+                identifier: 'password',
+                rules: [{type: 'empty', prompt: '请输入登录密码'}, {
+                    type: 'minLength[6]',
+                    prompt: '密码长度为6-20位'
+                }]
+            },
+            password2: {
+                identifier: 'password2',
+                rules: [{type: 'empty', prompt: '请重复输入登录密码'}, {
+                    type: 'minLength[6]',
+                    prompt: '密码长度为6-20位'
+                }, {
+                    type: 'match[password]',
+                    prompt: '重复输入密码不匹配'
+                }]
+            }
+        }
+    });
+});
+
+// $("#registerSubmit").on("click", function () {
+
+
+    // //form表单序列化json数据
+    // const data = {};
+    // $("#registerForm").serializeArray().map(function (x) {
+    //     if (data[x.name] !== undefined) {
+    //         if (!data[x.name].push) {
+    //             data[x.name] = [data[x.name]];
+    //         }
+    //         data[x.name].push(x.value || '');
+    //     } else {
+    //         data[x.name] = x.value || '';
+    //     }
+    // });
+    // $.ajax({
+    //     type: "post",
+    //     url: baseUrl + "/api/user/signUp",
+    //     contentType: 'application/json;charset=UTF-8',
+    //     data: data,
+    //     dataType: "json",
+    //     success: function (data) {
+    //         console.log(data);
+    //     },
+    //     error: function (err) {
+    //         alert("数据异常");
+    //     }
+    // })
+// });
+
+
+
+
