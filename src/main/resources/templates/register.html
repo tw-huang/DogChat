@@ -20,27 +20,30 @@
                 </div>
             </div>
         </div>
-        <form class="register ui form attached left aligned fluid segment" id="registerForm">
+        <div class="register ui form attached left aligned fluid segment" id="registerForm">
             <div class="field">
                 <label>昵 称</label>
-                <input name="nickname" placeholder="昵 称" type="text">
+                <input name="nickname" placeholder="昵 称" type="text" id="nickname">
             </div>
             <div class="field">
                 <label>邮 箱</label>
 
-                <input name="email" placeholder="tw.huang@foxmail.com" type="text">
+                <input name="email" placeholder="tw.huang@foxmail.com" type="text" id="email">
             </div>
             <div class="field">
                 <label>密 码</label>
-                <input name="password" placeholder="password" type="password">
+                <input name="password" placeholder="password" type="password" id="password">
             </div>
             <div class="field">
                 <label>确认密码</label>
-                <input name="password2" placeholder="password" type="password">
+                <input name="password2" placeholder="password" type="password" id="password2">
             </div>
-            <div class="ui orange submit button fluid" id="registerSubmit">注册</div>
-            <div class="ui error message"></div>
-        </form>
+            <div class="ui orange submit button fluid" onclick="DogChatRegister()">注册</div>
+        </div>
+<!--        <div class="ui message floating error closeable">-->
+<!--            <i class="close icon"></i>-->
+<!--            <div>Either the email or password was incorrect.</div>-->
+<!--        </div>-->
         <div class="ui bottom attached warning message">
             已注册<i class="icon help"></i><a href="/login">点击这里</a> 登录
         </div>

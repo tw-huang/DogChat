@@ -32,6 +32,17 @@ public class UserController {
 
     @PostMapping("/api/user/signUp")
     public Result signUp(@Valid @RequestBody User user) {
+        //检验数据库是否存在
+        User hasEmail = this.userMapper.selectOne(new QueryWrapper<User>().lambda()
+                .eq(User::getEmail, user.getEmail()));
+        if (hasEmail != null) {
+            return Result.failure("邮箱已经注册帐号");
+        }
+        User hasName = this.userMapper.selectOne(new QueryWrapper<User>().lambda()
+                .eq(User::getNickname, user.getNickname()));
+        if (hasName != null) {
+            return Result.failure("昵称已经被人使用");
+        }
         String salt = PasswordUtil.getSalt();
         String password = PasswordUtil.encryptPassword(user.getPassword(), salt);
         user.setSalt(salt);

@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:9001";
+const baseUrl = "http://localhost:9100";
 
 $(document).ready(function () {
     var popupLoading = '<i class="notched circle loading icon green"></i> loading...';
@@ -53,8 +53,10 @@ $(document).ready(function () {
     init();
 });
 
+//表单校验
 $(document).ready(function () {
-    $('.register.ui.form').form({
+    //注册表单校验
+    $('#registerForm').form({
         inline: true,
         fields: {
             nickname: {
@@ -92,36 +94,65 @@ $(document).ready(function () {
     });
 });
 
-// $("#registerSubmit").on("click", function () {
+//帐号注册
+function DogChatRegister() {
+    //form表单序列化json数据
+    const nickname = $("#nickname").val();
+    const email = $("#email").val();
+    const password = $("#password").val();
+    const password2 = $("#password2").val();
+    if (password !== password2) {
+        return;
+    }
+    const data = {
+        nickname: nickname,
+        email: email,
+        password: password,
+    };
+    $.ajax({
+        type: "post",
+        url: baseUrl + "/api/user/signUp",
+        contentType: 'application/json;charset=UTF-8',
+        data: JSON.stringify(data),
+        dataType: "json",
+        success: function (data) {
+            if (data.success) {
+                window.location.href = "/login";
+            }
+        },
+        error: function (err) {
+            window.location.href = "/register";
+        }
+    })
+}
 
-
-    // //form表单序列化json数据
-    // const data = {};
-    // $("#registerForm").serializeArray().map(function (x) {
-    //     if (data[x.name] !== undefined) {
-    //         if (!data[x.name].push) {
-    //             data[x.name] = [data[x.name]];
-    //         }
-    //         data[x.name].push(x.value || '');
-    //     } else {
-    //         data[x.name] = x.value || '';
-    //     }
-    // });
-    // $.ajax({
-    //     type: "post",
-    //     url: baseUrl + "/api/user/signUp",
-    //     contentType: 'application/json;charset=UTF-8',
-    //     data: data,
-    //     dataType: "json",
-    //     success: function (data) {
-    //         console.log(data);
-    //     },
-    //     error: function (err) {
-    //         alert("数据异常");
-    //     }
-    // })
-// });
-
-
+//帐号登录
+function DogChatLogin() {
+    //form表单序列化json数据
+    const email = $("#email-input").val();
+    const password = $("#password-input").val();
+    const data = {
+        email: email,
+        password: password,
+    };
+    console.log(data);
+    $.ajax({
+        type: "post",
+        url: baseUrl + "/api/user/signIn",
+        contentType: 'application/json;charset=UTF-8',
+        data: JSON.stringify(data),
+        dataType: "json",
+        success: function (data) {
+            if (data.success) {
+                const token = data.data.token;
+                window.localStorage.setItem("token", token);
+                window.location.href = "/";
+            }
+        },
+        error: function (err) {
+            window.location.href = "/login";
+        }
+    })
+}
 
 
