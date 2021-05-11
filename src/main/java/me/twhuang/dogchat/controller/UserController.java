@@ -3,11 +3,13 @@ package me.twhuang.dogchat.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.AllArgsConstructor;
 import me.twhuang.dogchat.dto.SignInDTO;
+import me.twhuang.dogchat.dto.SignUpDTO;
 import me.twhuang.dogchat.entity.User;
 import me.twhuang.dogchat.mapper.UserMapper;
 import me.twhuang.dogchat.util.JwtUtil;
 import me.twhuang.dogchat.util.PasswordUtil;
 import me.twhuang.dogchat.util.Result;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,22 +33,24 @@ public class UserController {
     private UserMapper userMapper;
 
     @PostMapping("/api/user/signUp")
-    public Result signUp(@Valid @RequestBody User user) {
+    public Result signUp(@Valid @RequestBody SignUpDTO signUpDTO) {
         //检验数据库是否存在
         User hasEmail = this.userMapper.selectOne(new QueryWrapper<User>().lambda()
-                .eq(User::getEmail, user.getEmail()));
+                .eq(User::getEmail, signUpDTO.getEmail()));
         if (hasEmail != null) {
             return Result.failure("邮箱已经注册帐号");
         }
         User hasName = this.userMapper.selectOne(new QueryWrapper<User>().lambda()
-                .eq(User::getNickname, user.getNickname()));
+                .eq(User::getNickname, signUpDTO.getNickname()));
         if (hasName != null) {
             return Result.failure("昵称已经被人使用");
         }
         String salt = PasswordUtil.getSalt();
-        String password = PasswordUtil.encryptPassword(user.getPassword(), salt);
+        String password = PasswordUtil.encryptPassword(signUpDTO.getPassword(), salt);
+        User user = new User();
         user.setSalt(salt);
         user.setPassword(password);
+        BeanUtils.copyProperties(signUpDTO, user);
         this.userMapper.insert(user);
         return Result.success("注册成功");
     }
@@ -72,6 +76,10 @@ public class UserController {
         Long userId = JwtUtil.getUserId(request);
         User user = this.userMapper.selectById(userId);
         return Result.success(user, "用户信息");
+    }
+
+    public static void main(String[] args) {
+
     }
 
 }

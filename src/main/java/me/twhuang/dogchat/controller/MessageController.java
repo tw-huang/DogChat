@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.AllArgsConstructor;
 import me.twhuang.dogchat.entity.Message;
+import me.twhuang.dogchat.entity.User;
 import me.twhuang.dogchat.mapper.MessageMapper;
+import me.twhuang.dogchat.mapper.UserMapper;
 import me.twhuang.dogchat.util.JwtUtil;
 import me.twhuang.dogchat.util.Result;
 import org.springframework.web.bind.annotation.*;
@@ -20,23 +22,21 @@ public class MessageController {
 
     private MessageMapper messageMapper;
 
-    @GetMapping("/api/message")
-    public Result messagePage(@RequestParam (required = false,defaultValue = "1") Integer pageNo,
-                              @RequestParam (required = false,defaultValue = "20") Integer pageSize){
-        Page<Message> page = new Page<>(pageNo,pageSize);
-        Page<Message> result = this.messageMapper.selectPage(page, new QueryWrapper<Message>().lambda()
-        .eq(Message::getDelFlag,false));
-        return Result.success(result);
-    }
+    private UserMapper userMapper;
 
-    @PostMapping("/api/message")
-    public Result message(@Valid @RequestBody Message message, HttpServletRequest request){
-        Long userId = JwtUtil.getUserId(request);
-        message.setUserId(userId);
-        message.setPushTime(new Date());
-        message.setDelFlag(false);
-        this.messageMapper.insert(message);
-        return Result.success();
+    @GetMapping("/api/message")
+    public Result messagePage(@RequestParam(required = false, defaultValue = "1") Integer pageNo,
+                              @RequestParam(required = false, defaultValue = "20") Integer pageSize) {
+        Page<Message> page = new Page<>(pageNo, pageSize);
+        Page<Message> result = this.messageMapper.selectPage(page, new QueryWrapper<Message>().lambda()
+                .eq(Message::getDelFlag, false));
+        result.getRecords().forEach(x -> {
+            User user = this.userMapper.selectById(x.getUserId());
+            x.setUser(user);
+            Message message = this.messageMapper.selectById(x.getQuoteMessageId());
+            x.setQuoteMessage(message);
+        });
+        return Result.success(result);
     }
 
 }
