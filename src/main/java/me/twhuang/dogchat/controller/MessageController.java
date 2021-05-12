@@ -33,8 +33,10 @@ public class MessageController {
         result.getRecords().forEach(x -> {
             User user = this.userMapper.selectById(x.getUserId());
             x.setUser(user);
-            Message message = this.messageMapper.selectById(x.getQuoteMessageId());
-            x.setQuoteMessage(message);
+            if (x.getQuoteMessageId() != null) {
+                Message message = this.messageMapper.selectById(x.getQuoteMessageId());
+                x.setQuoteMessage(message);
+            }
         });
         return Result.success(result);
     }

@@ -69,6 +69,84 @@ $(document).ready(function () {
         });
     }
 
+    //渲染一条消息
+    function renderMsg(item) {
+        if (item.quoteMessageId) {
+            var html = "  <div class=\"msg-box\">\n" +
+                "                <div class=\"picture\">\n" +
+                "                    <img class=\"pop-card\" data-position=\"right center\" data-offset=\"-40\" data-href=\"/user/637\"\n" +
+                "                         src=\"" + item?.user?.avatar + "\" alt=\"user\">\n" +
+                "                </div>\n" +
+                "                <div class=\"msg\">\n" +
+                "                    <span class=\"nickname\">" + item?.user?.nickname + "</span>\n" +
+                "                    <small class=\"timestamp\"><span class=\"\" \n" +
+                "                                                   style=\"\">" + item?.pushTime + "\n" +
+                "                                </span></small>\n" +
+                "                    <span class=\"message-body\">\n" +
+                "                            <blockquote>\n" +
+                "                                <p>" + item?.quoteMessage?.body + "</p>\n" +
+                "                            </blockquote>\n" +
+                "                            <p>" + item?.body + "</p>\n" +
+                "                        </span>\n" +
+                "                </div>\n" +
+                "\n" +
+                "                <div class=\"ui icon left center pointing dropdown ellipsis-icon\" tabindex=\"0\">\n" +
+                "                    <i class=\"ellipsis horizontal icon\"></i>\n" +
+                "                    <div class=\"menu\" data-offset=\"-33\" tabindex=\"-1\">\n" +
+                "                        <div class=\"item quote-button\"><i class=\"quote left icon\"></i> Quote</div>\n" +
+                "\n" +
+                "                        <div class=\"item delete-button\" data-href=\"/message/delete/3171\"\n" +
+                "                             onclick=\"confirm(&#39;Are you sure?&#39;)\"><i class=\"delete icon\"></i> Delete\n" +
+                "                        </div>\n" +
+                "\n" +
+                "                    </div>\n" +
+                "                </div>\n" +
+                "\n" +
+                "            </div>";
+            $("#message-container").append(html);
+        } else {
+            var html = "            <div class=\"msg-box\">\n" +
+                "                <div class=\"picture\">\n" +
+                "                    <img class=\"pop-card\" data-position=\"right center\" data-offset=\"-40\" data-href=\"/user/637\"\n" +
+                "                         src=\"" + item?.user?.avatar + "\" alt=\"user\">\n" +
+                "                </div>\n" +
+                "                <div class=\"msg\">\n" +
+                "                    <span class=\"nickname\">" + item?.user?.nickname + "</span>\n" +
+                "                    <small class=\"timestamp\"><span class=\"\" \n" +
+                "                                                   style=\"\">" + item?.pushTime + "\n" +
+                "                                </span></small>\n" +
+                "                    <span class=\"message-body\">\n" +
+                "                            <p>" + item?.body + "</p>\n" +
+                "                        </span>\n" +
+                "                </div>\n" +
+                "\n" +
+                "                <div class=\"ui icon left center pointing dropdown ellipsis-icon\" tabindex=\"0\">\n" +
+                "                    <i class=\"ellipsis horizontal icon\"></i>\n" +
+                "                    <div class=\"menu\" data-offset=\"-33\" tabindex=\"-1\">\n" +
+                "                        <div class=\"item quote-button\"><i class=\"quote left icon\"></i> Quote</div>\n" +
+                "\n" +
+                "                        <div class=\"item delete-button\" data-href=\"/message/delete/3170\"\n" +
+                "                             onclick=\"confirm(&#39;Are you sure?&#39;)\"><i class=\"delete icon\"></i> Delete\n" +
+                "                        </div>\n" +
+                "\n" +
+                "                    </div>\n" +
+                "                </div>\n" +
+                "\n" +
+                "            </div>";
+            $("#message-container").append(html);
+        }
+    }
+
+    //渲染统计人数
+    function renderSignUp(onlineCount, registerCount) {
+        if (onlineCount != null) {
+            $("#onlineCount").replaceWith("<i id=\"onlineCount\">" + onlineCount + "</i>");
+        }
+        if (registerCount != null) {
+            $("#signUpCount").replaceWith("<i id=\"signUpCount\">" + registerCount + "</i>");
+        }
+    }
+
     function isLogin() {
         let expire = localStorage.getExpire("token");
         var msgHtml = "";
@@ -76,9 +154,11 @@ $(document).ready(function () {
             msgHtml = "            <div class=\"field fluid message-box\">\n" +
                 "                    <img class=\"pop-card input-avatar\" data-position=\"bottom left\" data-href=\"/profile/637\"\n" +
                 "                         src=\"\">\n" +
-                "                    <textarea rows=\"2\" id=\"message-textarea\"\n" +
-                "                              placeholder=\"Write your message here... Enter to send\"></textarea>\n" +
+                "                    <input id=\"message-textarea\"\n" +
+                "                              placeholder=\"Write your message here... Enter to send\"/>\n" +
                 "                </div>";
+            //动态渲染底部
+            $("#message-input").append(msgHtml);
             joinWebsocket(expire);
 
         } else {
@@ -87,10 +167,56 @@ $(document).ready(function () {
                 "                        <a href=\"/register\">注册</a> 再愉快聊天\n" +
                 "                    </div>\n" +
                 "                </div>";
-
+            //动态渲染底部
+            $("#message-input").append(msgHtml);
         }
-        //动态渲染底部
-        $("#message-input").append(msgHtml);
+    }
+
+    function joinWebsocket(token) {
+        const url = wsUrl + "/api/user/" + token;
+        var ws = new WebSocket(url);
+        ws.onopen = function () {
+            console.log("ws_onopen");
+        };
+        ws.onmessage = function (evt) {
+            var json = JSON.parse(evt.data);
+            if (json.success) {
+                if (json.msg === "ConnectSuccess") {
+                    console.log("ConnectSuccess");
+                    console.log(json.data);
+                    renderSignUp(json.data, null);
+                }
+                if (json.msg === "ConnectClose") {
+                    console.log("ConnectClose");
+                    console.log(json.data);
+                    renderSignUp(json.data, null);
+                }
+                if (json.msg === "ReceiveMessage") {
+                    console.log("ReceiveMessage");
+                    renderMsg(json.data);
+                }
+            }
+
+        };
+        ws.onclose = function () {
+            console.log("ws_onclose");
+        };
+
+        $("#message-textarea").bind('keyup', function (event) {
+            //回车事件
+            if (event.keyCode === 13) {
+                var msg = $("#message-textarea").val();
+                if (msg === null || msg === undefined || msg === '' || msg === ' ') {
+                    return;
+                }
+                const json = {
+                    body: msg
+                };
+                ws.send(JSON.stringify(json));
+                //清空值
+                $("#message-textarea").val("");
+            }
+        });
     }
 
     function getMessage() {
@@ -104,70 +230,7 @@ $(document).ready(function () {
                     // console.log(data);
                     var records = data.data.records;
                     records.map(function (item, index, ary) {
-                        if (item.quoteMessageId) {
-                            var html = "  <div class=\"msg-box\">\n" +
-                                "                <div class=\"picture\">\n" +
-                                "                    <img class=\"pop-card\" data-position=\"right center\" data-offset=\"-40\" data-href=\"/user/637\"\n" +
-                                "                         src=\"" + item.user.avatar + "\" alt=\"user\">\n" +
-                                "                </div>\n" +
-                                "                <div class=\"msg\">\n" +
-                                "                    <span class=\"nickname\">" + item.user.nickname + "</span>\n" +
-                                "                    <small class=\"timestamp\"><span class=\"\" data-timestamp=\"2021-05-04T21:29:41Z\"\n" +
-                                "                                                   data-format=\"format(&#39;lll&#39;)\" data-refresh=\"0\" style=\"\">May 5, 2021 5:29\n" +
-                                "                                AM</span></small>\n" +
-                                "                    <span class=\"message-body\">\n" +
-                                "                            <blockquote>\n" +
-                                "                                <p>" + item.quoteMessage.body + "</p>\n" +
-                                "                            </blockquote>\n" +
-                                "                            <p>" + item.body + "</p>\n" +
-                                "                        </span>\n" +
-                                "                </div>\n" +
-                                "\n" +
-                                "                <div class=\"ui icon left center pointing dropdown ellipsis-icon\" tabindex=\"0\">\n" +
-                                "                    <i class=\"ellipsis horizontal icon\"></i>\n" +
-                                "                    <div class=\"menu\" data-offset=\"-33\" tabindex=\"-1\">\n" +
-                                "                        <div class=\"item quote-button\"><i class=\"quote left icon\"></i> Quote</div>\n" +
-                                "\n" +
-                                "                        <div class=\"item delete-button\" data-href=\"/message/delete/3171\"\n" +
-                                "                             onclick=\"confirm(&#39;Are you sure?&#39;)\"><i class=\"delete icon\"></i> Delete\n" +
-                                "                        </div>\n" +
-                                "\n" +
-                                "                    </div>\n" +
-                                "                </div>\n" +
-                                "\n" +
-                                "            </div>";
-                            $("#message-container").append(html);
-                        } else {
-                            var html = "            <div class=\"msg-box\">\n" +
-                                "                <div class=\"picture\">\n" +
-                                "                    <img class=\"pop-card\" data-position=\"right center\" data-offset=\"-40\" data-href=\"/user/637\"\n" +
-                                "                         src=\"" + item.user.avatar + "\" alt=\"user\">\n" +
-                                "                </div>\n" +
-                                "                <div class=\"msg\">\n" +
-                                "                    <span class=\"nickname\">" + item.user.nickname + "</span>\n" +
-                                "                    <small class=\"timestamp\"><span class=\"\" data-timestamp=\"2021-05-04T20:27:50Z\"\n" +
-                                "                                                   data-format=\"format(&#39;lll&#39;)\" data-refresh=\"0\" style=\"\">May 5, 2021 4:27\n" +
-                                "                                AM</span></small>\n" +
-                                "                    <span class=\"message-body\">\n" +
-                                "                            <p>" + item.body + "</p>\n" +
-                                "                        </span>\n" +
-                                "                </div>\n" +
-                                "\n" +
-                                "                <div class=\"ui icon left center pointing dropdown ellipsis-icon\" tabindex=\"0\">\n" +
-                                "                    <i class=\"ellipsis horizontal icon\"></i>\n" +
-                                "                    <div class=\"menu\" data-offset=\"-33\" tabindex=\"-1\">\n" +
-                                "                        <div class=\"item quote-button\"><i class=\"quote left icon\"></i> Quote</div>\n" +
-                                "\n" +
-                                "                        <div class=\"item delete-button\" data-href=\"/message/delete/3170\"\n" +
-                                "                             onclick=\"confirm(&#39;Are you sure?&#39;)\"><i class=\"delete icon\"></i> Delete\n" +
-                                "                        </div>\n" +
-                                "\n" +
-                                "                    </div>\n" +
-                                "                </div>\n" +
-                                "\n" +
-                                "            </div>";
-                            $("#message-container").append(html);
-                        }
+                        renderMsg(item);
                     })
                 }
             },
@@ -177,38 +240,39 @@ $(document).ready(function () {
         })
     }
 
-    function joinWebsocket(token) {
-        const url = wsUrl + "/api/user/" + token;
-        console.log("ws_url:" + url);
-
-        var ws = new WebSocket(url);
-        ws.onopen = function () {
-            console.log("ws_onopen:");
-            const json = {
-                body: "test"
-            };
-            // ws.send(JSON.stringify(json));
-            console.log("ws_send:" + json);
-        };
-        ws.onmessage = function (evt) {
-            var msg = evt.data;
-            console.log("ws_onmessage:" + msg);
-        };
-        ws.onclose = function () {
-            console.log("ws_onclose:");
-        };
+    function getSignUp() {
+        $.ajax({
+            type: "get",
+            url: baseUrl + "/api/user/signUp",
+            data: {},
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    var dataMap = data.data;
+                    if (dataMap != null) {
+                        renderSignUp(dataMap.onlineCount, dataMap.registerCount);
+                    }
+                }
+            },
+            error: function (err) {
+                window.location.href = "/";
+            }
+        })
     }
 
     function init() {
         if (typeof (WebSocket) === "undefined") {
             alert("您的浏览器不支持WebSocket! 请使用Chrome、Firefox等浏览器。")
         }
+        //统计人数
+        getSignUp();
         //获取数据
         getMessage();
         //是否登录
         isLogin();
         //激活动态菜单
         activateSemantics();
+
     }
 
     //初始化入口

@@ -1,6 +1,7 @@
 package me.twhuang.dogchat.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import lombok.extern.slf4j.Slf4j;
 import me.twhuang.dogchat.entity.Message;
 import me.twhuang.dogchat.entity.User;
@@ -8,8 +9,6 @@ import me.twhuang.dogchat.mapper.MessageMapper;
 import me.twhuang.dogchat.mapper.UserMapper;
 import me.twhuang.dogchat.util.JwtUtil;
 import me.twhuang.dogchat.util.Result;
-import me.twhuang.dogchat.vo.MessageVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -76,7 +75,7 @@ public class WebSocket {
             addOnlineCount();
         }
         log.info("用户Id连接:" + this.userId + ",当前在线用户数量为:" + getOnlineCount());
-        this.session.getAsyncRemote().sendText(JSON.toJSONString(Result.success(getOnlineCount(), "Connect success")));
+        sendMessageToAll(JSON.toJSONString(Result.success(getOnlineCount(), "ConnectSuccess")));
     }
 
     //连接关闭调用的方法
@@ -88,7 +87,7 @@ public class WebSocket {
             subOnlineCount();
         }
         log.info("用户Id退出:" + userId + ",当前在线用户数量为:" + getOnlineCount());
-        this.session.getAsyncRemote().sendText(JSON.toJSONString(Result.success(getOnlineCount(), "Connect close")));
+        sendMessageToAll(JSON.toJSONString(Result.success(getOnlineCount(), "ConnectClose")));
     }
 
     //收到客户端消息后调用的方法
@@ -106,20 +105,16 @@ public class WebSocket {
             msg.setPushTime(new Date());
             messageMapper.insert(msg);
             //推送到在线客户端
-            MessageVO vo = new MessageVO();
-            BeanUtils.copyProperties(msg, vo);
-            if (msg.getQuoteMessageId() != null && msg.getQuoteMessageId() != 0L) {
-                Message quoteMsg = messageMapper.selectById(msg.getQuoteMessageId());
-                if (quoteMsg != null) {
-                    vo.setQuoteMessage(quoteMsg.getBody());
-                }
-                User user = userMapper.selectById(userId);
-                if (user != null) {
-                    BeanUtils.copyProperties(msg, vo);
-                }
-
+            User user = userMapper.selectById(userId);
+            //重要信息不返回
+            user.setPassword(null);
+            user.setSalt(null);
+            msg.setUser(user);
+            if (msg.getQuoteMessageId() != null) {
+                Message message = messageMapper.selectById(msg.getQuoteMessageId());
+                msg.setQuoteMessage(message);
             }
-            sendMessageToAll(JSON.toJSONString(Result.success(getOnlineCount(), "Receive message")));
+            sendMessageToAll(JSON.toJSONString(Result.success(msg, "ReceiveMessage"), SerializerFeature.WriteMapNullValue));
         } catch (Exception e) {
             e.printStackTrace();
             log.info("用户Id发送:" + userId + ",参数错误");

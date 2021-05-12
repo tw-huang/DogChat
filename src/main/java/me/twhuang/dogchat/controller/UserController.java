@@ -78,8 +78,13 @@ public class UserController {
         return Result.success(user, "用户信息");
     }
 
-    public static void main(String[] args) {
-
+    @GetMapping("/api/user/signUp")
+    public Result signUpCount() {
+        Integer count = this.userMapper.selectCount(null);
+        int onlineCount = WebSocket.getOnlineCount();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("registerCount", count);
+        map.put("onlineCount", onlineCount);
+        return Result.success(map, "用户统计信息");
     }
-
 }
