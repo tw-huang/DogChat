@@ -31,4 +31,5 @@ public class IndexController {
     public String profile() {
         return "profile";
     }
+
 }

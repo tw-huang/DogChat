@@ -20,29 +20,28 @@
                 </div>
             </div>
         </div>
-        <form class="register ui form attached left aligned fluid segment" method="post" action="/register">
+        <div class="register ui form attached left aligned fluid segment" method="post" action="/register">
             <div class="field">
                 <label>昵 称</label>
-                <input name="nickname" placeholder="昵 称" type="text">
+                <input name="nickname" placeholder="昵 称" type="text" id="nickname">
             </div>
             <div class="field">
-                <label>邮 箱</label>
-
-                <input name="email" placeholder="tw.huang@foxmail.com" type="text">
+                <label>GitHub</label>
+                <input name="github" placeholder="github" type="text" id="github">
             </div>
             <div class="field">
-                <label>密 码</label>
-                <input name="password" placeholder="password" type="password">
+                <label>个人网站</label>
+                <input name="website" placeholder="website" type="text" id="website">
             </div>
             <div class="field">
-                <label>确认密码</label>
-                <input name="password2" placeholder="password" type="password">
+                <label>关于我</label>
+                <input name="about" placeholder="about" type="text" id="about">
             </div>
-            <div class="ui orange submit button fluid">完成</div>
+            <div class="ui orange submit button fluid" onclick="DogChatProfile()">完成</div>
             <div class="ui error message"></div>
-        </form>
+        </div>
         <div class="ui bottom attached warning message">
-            取消<i class="icon help"></i><a href="/login">点击这里</a> 返回
+            取消设置<i class="icon help"></i><a href="/login">点击这里</a> 返回首页
         </div>
         
     </div>
@@ -51,5 +50,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.1/dist/semantic.min.js"></script>
+<script type="text/javascript" th:src="@{/js/profile.js}"></script>
 </body>
 </html>

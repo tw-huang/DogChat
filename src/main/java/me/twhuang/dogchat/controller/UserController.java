@@ -1,7 +1,9 @@
 package me.twhuang.dogchat.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.AllArgsConstructor;
+import me.twhuang.dogchat.dto.ProfileDTO;
 import me.twhuang.dogchat.dto.SignInDTO;
 import me.twhuang.dogchat.dto.SignUpDTO;
 import me.twhuang.dogchat.entity.User;
@@ -10,10 +12,7 @@ import me.twhuang.dogchat.util.JwtUtil;
 import me.twhuang.dogchat.util.PasswordUtil;
 import me.twhuang.dogchat.util.Result;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -72,10 +71,19 @@ public class UserController {
     }
 
     @GetMapping("/api/user")
-    public Result user(HttpServletRequest request) {
+    public Result getUser(HttpServletRequest request) {
         Long userId = JwtUtil.getUserId(request);
         User user = this.userMapper.selectById(userId);
         return Result.success(user, "用户信息");
+    }
+
+    @PutMapping("/api/user")
+    public Result putUser(@RequestBody ProfileDTO profileDTO, HttpServletRequest request) {
+        Long userId = JwtUtil.getUserId(request);
+        User user = new User();
+        BeanUtils.copyProperties(profileDTO, user);
+        this.userMapper.update(user, new UpdateWrapper<User>().lambda().eq(User::getId, userId));
+        return Result.success(user, "修改用户信息");
     }
 
     @GetMapping("/api/user/signUp")
