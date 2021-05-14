@@ -28,7 +28,6 @@ Storage.prototype.getExpire = key => {
 
 $(document).ready(function () {
     var popupLoading = '<i class="notched circle loading icon green"></i> loading...';
-
     var pageNo = 1;
     var pageSize = 20;
 
@@ -176,30 +175,30 @@ $(document).ready(function () {
         const url = wsUrl + "/api/user/" + token;
         var ws = new WebSocket(url);
         ws.onopen = function () {
-            console.log("ws_onopen");
+            // console.log("ws_onopen");
         };
         ws.onmessage = function (evt) {
             var json = JSON.parse(evt.data);
             if (json.success) {
                 if (json.msg === "ConnectSuccess") {
-                    console.log("ConnectSuccess");
-                    console.log(json.data);
+                    // console.log("ConnectSuccess");
+                    // console.log(json.data);
                     renderSignUp(json.data, null);
                 }
                 if (json.msg === "ConnectClose") {
-                    console.log("ConnectClose");
-                    console.log(json.data);
+                    // console.log("ConnectClose");
+                    // console.log(json.data);
                     renderSignUp(json.data, null);
                 }
                 if (json.msg === "ReceiveMessage") {
-                    console.log("ReceiveMessage");
+                    // console.log("ReceiveMessage");
                     renderMsg(json.data);
                 }
             }
 
         };
         ws.onclose = function () {
-            console.log("ws_onclose");
+            // console.log("ws_onclose");
         };
 
         $("#message-textarea").bind('keyup', function (event) {
@@ -219,7 +218,7 @@ $(document).ready(function () {
         });
     }
 
-    function getMessage() {
+    function getMessage(pageNo, pageSize) {
         $.ajax({
             type: "get",
             url: baseUrl + "/api/message",
@@ -260,6 +259,13 @@ $(document).ready(function () {
         })
     }
 
+    function scrollToTop() {
+        console.log("1111");
+        $(".msg-box").scroll(function() {
+            console.log("2222");
+        });
+    }
+
     function init() {
         if (typeof (WebSocket) === "undefined") {
             alert("您的浏览器不支持WebSocket! 请使用Chrome、Firefox等浏览器。")
@@ -267,11 +273,13 @@ $(document).ready(function () {
         //统计人数
         getSignUp();
         //获取数据
-        getMessage();
+        getMessage(pageNo,pageSize);
         //是否登录
         isLogin();
         //激活动态菜单
         activateSemantics();
+        //滑动
+        scrollToTop();
 
     }
 
