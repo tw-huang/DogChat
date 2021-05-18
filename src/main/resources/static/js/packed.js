@@ -31,25 +31,21 @@ $(document).ready(function () {
     var pageNo = 1;
     var pageSize = 20;
 
+    //激活菜单
     function activateSemantics() {
-        $('.ui.dropdown').dropdown();
-        $('.ui.checkbox').checkbox();
-        $('.ui.accordion').accordion();
+        //引用
         $('.message .close').on('click', function () {
             $(this).closest('.message').transition('fade');
         });
+        //菜单
         $('#toggle-sidebar').on('click', function () {
             $('.menu.sidebar').sidebar('setting', 'transition', 'overlay').sidebar('toggle');
         });
-        $('#show-help-modal').on('click', function () {
-            $('.ui.modal.help').modal({blurring: true}).modal('show');
-        });
-        $('#show-snippet-modal').on('click', function () {
-            $('.ui.modal.snippet').modal({blurring: true}).modal('show');
-        });
+        //关于
         $('#show-about-modal').on('click', function () {
             $('.ui.modal.about').modal({blurring: true}).modal('show');
         });
+        //悬浮个人信息
         $('.pop-card').popup({
             inline: true,
             on: 'hover',
@@ -70,6 +66,7 @@ $(document).ready(function () {
 
     //渲染一条消息
     function renderMsg(item) {
+        // console.log("renderMsg");
         if (item.quoteMessageId) {
             var html = "  <div class=\"msg-box\">\n" +
                 "                <div class=\"picture\">\n" +
@@ -102,7 +99,7 @@ $(document).ready(function () {
                 "                </div>\n" +
                 "\n" +
                 "            </div>";
-            $("#message-container").append(html);
+            $("#messageList").append(html);
         } else {
             var html = "            <div class=\"msg-box\">\n" +
                 "                <div class=\"picture\">\n" +
@@ -132,7 +129,7 @@ $(document).ready(function () {
                 "                </div>\n" +
                 "\n" +
                 "            </div>";
-            $("#message-container").append(html);
+            $("#messageList").append(html);
         }
     }
 
@@ -146,6 +143,7 @@ $(document).ready(function () {
         }
     }
 
+    //渲染底部输入框
     function isLogin() {
         let expire = localStorage.getExpire("token");
         var msgHtml = "";
@@ -171,6 +169,7 @@ $(document).ready(function () {
         }
     }
 
+    //连接websocket
     function joinWebsocket(token) {
         const url = wsUrl + "/api/user/" + token;
         var ws = new WebSocket(url);
@@ -218,6 +217,7 @@ $(document).ready(function () {
         });
     }
 
+    //ajax获取历史数据
     function getMessage(pageNo, pageSize) {
         $.ajax({
             type: "get",
@@ -239,6 +239,7 @@ $(document).ready(function () {
         })
     }
 
+    //ajax获取登录信息
     function getSignUp() {
         $.ajax({
             type: "get",
@@ -260,8 +261,9 @@ $(document).ready(function () {
     }
 
     function scrollToTop() {
-        console.log("1111");
-        $(".msg-box").scroll(function() {
+        //获取数据
+        getMessage(pageNo,pageSize);
+        $(".messageList").scroll(function() {
             console.log("2222");
         });
     }
@@ -272,8 +274,6 @@ $(document).ready(function () {
         }
         //统计人数
         getSignUp();
-        //获取数据
-        getMessage(pageNo,pageSize);
         //是否登录
         isLogin();
         //激活动态菜单

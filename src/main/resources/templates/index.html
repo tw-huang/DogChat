@@ -45,31 +45,12 @@
     <a class="item" id="show-about-modal">About</a>
     <div class="right menu hide-on-mobile">
 
-        <div class="item">
-            <button class="ui button orange basic" id="show-snippet-modal">Create Snippets</button>
-        </div>
-
         <a class="item" id="toggle-sidebar">
             <i class="sidebar icon"></i>
         </a>
+
     </div>
 </div>
-
-<!-- Snippet Modal -->
-<div class="ui modal small snippet">
-    <div class="header">Create code or text snippets</div>
-    <div class="content">
-        <div class="ui form">
-            <textarea id="snippet-textarea" rows="20"></textarea>
-        </div>
-    </div>
-    <div class="actions">
-        <button class="ui button cancel">Cancel</button>
-        <button class="ui button orange">Help</button>
-        <button class="ui button blue approve" id="snippet-button">Create</button>
-    </div>
-</div>
-
 
 <!-- About Modal -->
 <div class="ui modal small about">
@@ -94,26 +75,9 @@
     </div>
 </div>
 
-<!-- Mobile message Modal -->
-<div id="mobile-new-message-modal" class="ui modal small">
-    <div class="content">
-        <div class="ui form">
-            <textarea id="mobile-message-textarea" rows="15"></textarea>
-        </div>
-    </div>
-    <div class="actions">
-        <button class="ui button cancel">Cancel</button>
-        <button class="ui button orange approve" id="send-button">Send</button>
-    </div>
-</div>
-
-
 <div class="pusher">
     <div class="chat-box">
-        <div class="messages">
-            <div class="ui text loader">Loading messages...</div>
-            <div id="message-container">
-            </div>
+        <div class="messages" id="messageList">
         </div>
     </div>
     <div class="input-area">
