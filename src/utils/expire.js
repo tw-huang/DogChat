@@ -1,11 +1,3 @@
-// //接口地址
-// const baseUrl = 'http://localhost:9100'
-// //ws地址
-// const wsUrl = 'ws://localhost:9100'
-//
-// //token过期时间（24小时）
-// const expireToken = 24 * 60 * 60 * 1000
-
 Storage.prototype.setExpire = (key, value, expire) => {
 	let obj = {
 		data: value,

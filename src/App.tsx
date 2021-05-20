@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import Header from './components/Header'
 import Content from './components/Content'
 import Footer from './components/Footer'
-import './utils/index'
+import './utils/expire'
+import { getHeaderInfo, getMessage } from './services'
 
 const App: React.FC = () => {
 	//在线人数
@@ -23,7 +24,23 @@ const App: React.FC = () => {
 		if (expire) {
 			setIsLogin(true)
 		}
-	},[])
+		const fetchData = async () => {
+			let register = await getHeaderInfo()
+			// console.log(data)
+			if (register.success) {
+				setRegisters(register.data.registerCount)
+				setOnline(register.data.onlineCount)
+			}
+
+			let msgList = await getMessage(1, 10)
+			// console.log(msgList)
+			if (msgList.success) {
+				setMsgList(msgList.data.records)
+			}
+		}
+		//异步请求数据
+		fetchData()
+	}, [])
 
 	return (
 		<div>

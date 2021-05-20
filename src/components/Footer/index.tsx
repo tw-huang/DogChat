@@ -6,9 +6,9 @@ interface Props {
 
 const Footer: React.FC<Props> = (props) => {
 	const isLogin = props.isLogin
-
 	return (
-		<div>
+		<div className='sticky bottom-0'>
+			<hr />
 			<div>{isLogin ? 'login' : 'noLogin'}</div>
 		</div>
 	)

@@ -11,7 +11,7 @@ const Content: React.FC<Props> = (props) => {
 	const list = msgList.map((item) => <li key={item.id}>{item.body}</li>)
 
 	return (
-		<div>
+		<div className="my-2">
 			content:
 			<span>list:</span>
 			{list}
