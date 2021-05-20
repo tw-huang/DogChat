@@ -1,20 +1,37 @@
-import React, { Component } from "react";
-import Img from "./assets/640.png";
+import React, { useEffect, useState } from 'react'
+import Header from './components/Header'
+import Content from './components/Content'
+import Footer from './components/Footer'
+import './utils/index'
 
-class App extends Component {
-	render() {
-		return (
-			<div className='p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4'>
-				<div className='flex-shrink-0'>
-					<img className='h-12 w-12' src={Img} alt='' />
-				</div>
-				<div>
-					<div className='text-xl font-medium text-black'>ChitChat</div>
-					<p className='text-gray-500'>You have a new message!</p>
-				</div>
-			</div>
-		);
-	}
+const App: React.FC = () => {
+	//在线人数
+	const [online, setOnline] = useState<number>(0)
+	//注册人数
+	const [registers, setRegisters] = useState<number>(0)
+	// //消息列表
+	const [msgList, setMsgList] = useState<Array<object>>([
+		{ id: 1, body: 'sss' },
+		{ id: 2, body: 'sss' },
+		{ id: 3, body: 'sss' },
+	])
+	//是否登录
+	const [isLogin, setIsLogin] = useState<boolean>(false)
+
+	useEffect(() => {
+		let expire = localStorage.getExpire('token')
+		if (expire) {
+			setIsLogin(true)
+		}
+	},[])
+
+	return (
+		<div>
+			<Header online={online} registers={registers} />
+			<Content msgList={msgList} />
+			<Footer isLogin={isLogin} />
+		</div>
+	)
 }
 
-export default App;
+export default App
