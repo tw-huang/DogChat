@@ -1,52 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import Header from './components/Header'
-import Content from './components/Content'
-import Footer from './components/Footer'
+import React from 'react'
+// @ts-ignore
+import { Route, Switch} from 'react-router-dom'
+import Chat from './pages/Chat'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Profile from './pages/Profile'
 import './utils/expire'
-import { getHeaderInfo, getMessage } from './services'
 
 const App: React.FC = () => {
-	//在线人数
-	const [online, setOnline] = useState<number>(0)
-	//注册人数
-	const [registers, setRegisters] = useState<number>(0)
-	// //消息列表
-	const [msgList, setMsgList] = useState<Array<object>>([
-		{ id: 1, body: 'sss' },
-		{ id: 2, body: 'sss' },
-		{ id: 3, body: 'sss' },
-	])
-	//是否登录
-	const [isLogin, setIsLogin] = useState<boolean>(false)
-
-	useEffect(() => {
-		let expire = localStorage.getExpire('token')
-		if (expire) {
-			setIsLogin(true)
-		}
-		const fetchData = async () => {
-			let register = await getHeaderInfo()
-			// console.log(data)
-			if (register.success) {
-				setRegisters(register.data.registerCount)
-				setOnline(register.data.onlineCount)
-			}
-
-			let msgList = await getMessage(1, 10)
-			// console.log(msgList)
-			if (msgList.success) {
-				setMsgList(msgList.data.records)
-			}
-		}
-		//异步请求数据
-		fetchData()
-	}, [])
-
 	return (
 		<div>
-			<Header online={online} registers={registers} />
-			<Content msgList={msgList} />
-			<Footer isLogin={isLogin} />
+			<Switch>
+				<Route exact path='/' component={Chat} />
+				<Route exact path='/login' component={Login} />
+				<Route exact path='/register' component={Register} />
+				<Route exact path='/profile' component={Profile} />
+			</Switch>
 		</div>
 	)
 }
