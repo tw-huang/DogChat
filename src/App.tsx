@@ -9,7 +9,7 @@ import './utils/expire'
 
 const App: React.FC = () => {
 	return (
-		<div>
+		<div className="text-gray-700 bg-white">
 			<Switch>
 				<Route exact path='/' component={Chat} />
 				<Route exact path='/login' component={Login} />
