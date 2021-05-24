@@ -79,10 +79,10 @@ const Login: React.FC = () => {
 				</form>
 				<div className='my-2'>
 					<span className='text-sm'>
-						tips: 未有帐号？点击{' '}
+						tips: 未有帐号？点击
 						<Link to='/register'>
 							<span className='hover:text-gray-900 hover:underline'>这里</span>
-						</Link>{' '}
+						</Link>
 						注册
 					</span>
 				</div>

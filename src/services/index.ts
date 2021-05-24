@@ -26,10 +26,7 @@ export async function signUp(
 }
 
 // 登录接口
-export async function signIn(
-	email: string,
-	password: string
-) {
+export async function signIn(email: string, password: string) {
 	return axios({
 		url: baseUrl + '/api/signIn',
 		method: 'post',
@@ -47,7 +44,44 @@ export async function signIn(
 		})
 }
 
+// 获取用户信息
+export async function getUser() {
+	return axios({
+		url: baseUrl + '/api/user',
+		method: 'get',
+		headers: {
+			'Content-Type': 'application/json',
+			'Token': localStorage.getExpire('Token'),
+		},
+	})
+		.then((res) => {
+			return res.data
+		})
+		.catch((err) => {
+			console.log(err)
+		})
+}
 
+// 修改用户信息
+export async function putUser(github: string, website: string, about: string) {
+	return axios({
+		url: baseUrl + '/api/user',
+		method: 'put',
+		data: {
+			github: github,
+			website: website,
+			about: about,
+		},
+		headers: { 'Content-Type': 'application/json',
+			'Token': localStorage.getExpire('Token')},
+	})
+		.then((res) => {
+			return res.data
+		})
+		.catch((err) => {
+			console.log(err)
+		})
+}
 
 // 获取头部信息
 export async function getHeaderInfo() {
