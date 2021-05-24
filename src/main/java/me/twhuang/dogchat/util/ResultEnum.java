@@ -6,11 +6,10 @@ package me.twhuang.dogchat.util;
  * @Description: 返回值枚举类
  */
 public enum ResultEnum {
-
-    UNKNOWN_ERROR(-1,"unknownError"),
     SUCCESS(1, "success"),
     FAILURE(0, "failure"),
-    UNAUTHORIZED(403, "unAuthorized");
+    UNAUTHORIZED(401, "unAuthorized"),
+    UNKNOWN_ERROR(501, "unknownError");
 
     private Integer code;
 

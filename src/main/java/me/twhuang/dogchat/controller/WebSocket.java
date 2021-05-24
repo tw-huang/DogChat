@@ -25,7 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class WebSocket {
 
-
     private static MessageMapper messageMapper;
 
     private static UserMapper userMapper;
@@ -33,13 +32,11 @@ public class WebSocket {
     @Resource
     public void setMessageMapper(MessageMapper messageMapper) {
         WebSocket.messageMapper = messageMapper;
-
     }
 
     @Resource
     public void setUserMapper(UserMapper userMapper) {
         WebSocket.userMapper = userMapper;
-
     }
 
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
@@ -128,8 +125,7 @@ public class WebSocket {
         error.printStackTrace();
     }
 
-
-    public void sendMessageToAll(String message) {
+    private void sendMessageToAll(String message) {
         for (WebSocket item : webSocketMap.values()) {
             //异步发送消息
             item.session.getAsyncRemote().sendText(message);
@@ -140,11 +136,11 @@ public class WebSocket {
         return onlineCount;
     }
 
-    public static synchronized void addOnlineCount() {
+    private static synchronized void addOnlineCount() {
         WebSocket.onlineCount++;
     }
 
-    public static synchronized void subOnlineCount() {
+    private static synchronized void subOnlineCount() {
         WebSocket.onlineCount--;
     }
 }

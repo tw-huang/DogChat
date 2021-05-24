@@ -31,7 +31,7 @@ public class UserController {
 
     private UserMapper userMapper;
 
-    @PostMapping("/api/user/signUp")
+    @PostMapping("/api/signUp")
     public Result signUp(@Valid @RequestBody SignUpDTO signUpDTO) {
         //检验数据库是否存在
         User hasEmail = this.userMapper.selectOne(new QueryWrapper<User>().lambda()
@@ -54,7 +54,17 @@ public class UserController {
         return Result.success("注册成功");
     }
 
-    @PostMapping("/api/user/signIn")
+    @GetMapping("/api/signUp")
+    public Result signUpCount() {
+        Integer count = this.userMapper.selectCount(null);
+        int onlineCount = WebSocket.getOnlineCount();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("registerCount", count);
+        map.put("onlineCount", onlineCount);
+        return Result.success(map, "用户统计信息");
+    }
+
+    @PostMapping("/api/signIn")
     public Result signIn(@Valid @RequestBody SignInDTO signInDTO) {
         User user = this.userMapper.selectOne(new QueryWrapper<User>().lambda()
                 .eq(User::getEmail, signInDTO.getEmail()));
@@ -84,15 +94,5 @@ public class UserController {
         BeanUtils.copyProperties(profileDTO, user);
         this.userMapper.update(user, new UpdateWrapper<User>().lambda().eq(User::getId, userId));
         return Result.success(user, "修改用户信息");
-    }
-
-    @GetMapping("/api/user/signUp")
-    public Result signUpCount() {
-        Integer count = this.userMapper.selectCount(null);
-        int onlineCount = WebSocket.getOnlineCount();
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("registerCount", count);
-        map.put("onlineCount", onlineCount);
-        return Result.success(map, "用户统计信息");
     }
 }

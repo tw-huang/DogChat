@@ -29,11 +29,6 @@ spring:
         max-idle: 5
         max-wait: -1
         max-active: 10
-  thymeleaf:
-    cache: false
-    encoding: utf-8
-    servlet:
-      content-type: text/html
   servlet:
     multipart:
       #开启文件上传

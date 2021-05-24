@@ -36,6 +36,15 @@ public class Result {
         return result;
     }
 
+    public static Result success(Integer code, String msg) {
+        Result result = new Result();
+        result.success = true;
+        result.data = null;
+        result.msg = msg;
+        result.code = code;
+        return result;
+    }
+
     public static Result success(Object data) {
         Result result = new Result();
         result.success = true;
@@ -54,9 +63,18 @@ public class Result {
         return result;
     }
 
+    public static Result success(Integer code, Object data, String msg) {
+        Result result = new Result();
+        result.success = true;
+        result.data = data;
+        result.msg = msg;
+        result.code = code;
+        return result;
+    }
+
     public static Result failure() {
         Result result = new Result();
-        result.success = false;
+        result.success = true;
         result.data = null;
         result.msg = ResultEnum.FAILURE.getMsg();
         result.code = ResultEnum.FAILURE.getCode();
@@ -65,7 +83,7 @@ public class Result {
 
     public static Result failure(String msg) {
         Result result = new Result();
-        result.success = false;
+        result.success = true;
         result.data = null;
         result.msg = msg;
         result.code = ResultEnum.FAILURE.getCode();
@@ -80,5 +98,4 @@ public class Result {
         result.code = code;
         return result;
     }
-
 }

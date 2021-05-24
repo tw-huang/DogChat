@@ -35,7 +35,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         Map<String, Claim> stringClaimMap = JwtUtil.verifyToken(Objects.isNull(token)?parameterToken:token);
         if (stringClaimMap == null) {
             log.error("Token error");
-            throw new CommonException("Token error");
+            throw new TokenException("Token error");
         }
         return true;
 
