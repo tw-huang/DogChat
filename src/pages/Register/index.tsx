@@ -2,19 +2,10 @@ import React, { useState } from 'react'
 // @ts-ignore
 import { Link } from 'react-router-dom'
 // @ts-ignore
-import { useHistory  } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import logo from '../../assets/logo.png'
 import { signUp } from '../../services'
-
-const WarnMessage: React.FC<{
-	content: string
-}> = ({ content }) => {
-	return (
-		<div className='my-2 text-sm text-red-400'>
-			<span>{content}</span>
-		</div>
-	)
-}
+import WarnMsg from '../../components/WarnMsg'
 
 const Register: React.FC = () => {
 	//表单数据
@@ -27,8 +18,7 @@ const Register: React.FC = () => {
 	//提示
 	const [warnContent, setWarnContent] = useState<string>('')
 
-
-	const history = useHistory();
+	const history = useHistory()
 
 	const printValues = (e: { preventDefault: () => void }) => {
 		e.preventDefault()
@@ -42,11 +32,15 @@ const Register: React.FC = () => {
 			console.log(res)
 			if (res?.success) {
 				if (res.code === 1) {
-					history.push("/login")
+					history.push('/login')
+					return
 				}
+				setWarnState(true)
+				setWarnContent(res?.msg)
+				return
 			}
 			setWarnState(true)
-			setWarnContent(res.msg)
+			setWarnContent('网络错误')
 		}
 		//异步请求数据
 		fetchData()
@@ -57,9 +51,9 @@ const Register: React.FC = () => {
 			<div className='flex flex-col justify-center items-center'>
 				<div className='flex flex-row items-center py-4'>
 					<img className='w-8 mr-1' src={logo} alt='logo' />
-					<span className='font-bold text-2xl'>欢迎注册DogChat</span>
+					<span className='font-bold text-2xl'>注册DogChat</span>
 				</div>
-				{warnState && <WarnMessage content={warnContent} />}
+				{warnState && <WarnMsg content={warnContent} />}
 
 				<form className='my-2' onSubmit={printValues}>
 					<div className='flex flex-col mb-2'>

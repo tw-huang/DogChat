@@ -8,7 +8,7 @@ export async function signUp(
 	password: string
 ) {
 	return axios({
-		url: baseUrl + '/api/user/signUp',
+		url: baseUrl + '/api/signUp',
 		method: 'post',
 		data: {
 			nickname: nickname,
@@ -25,10 +25,34 @@ export async function signUp(
 		})
 }
 
+// 登录接口
+export async function signIn(
+	email: string,
+	password: string
+) {
+	return axios({
+		url: baseUrl + '/api/signIn',
+		method: 'post',
+		data: {
+			email: email,
+			password: password,
+		},
+		headers: { 'Content-Type': 'application/json' },
+	})
+		.then((res) => {
+			return res.data
+		})
+		.catch((err) => {
+			console.log(err)
+		})
+}
+
+
+
 // 获取头部信息
 export async function getHeaderInfo() {
 	return axios({
-		url: baseUrl + '/api/user/signUp',
+		url: baseUrl + '/api/signUp',
 		method: 'get',
 	})
 		.then((res) => {

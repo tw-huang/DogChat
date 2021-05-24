@@ -1,5 +1,3 @@
-// 常量文件
-
 //接口地址
 export const baseUrl = 'http://localhost:9100'
 //ws地址
