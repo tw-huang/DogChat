@@ -49,6 +49,7 @@ public class UserController {
         User user = new User();
         user.setSalt(salt);
         user.setPassword(password);
+        user.setAvatar("https://peplife-img-1302830364.cos.ap-guangzhou.myqcloud.com/org-avatar/2021-04/4dde2f0444d9496c99ffc87fa4d9a50d.jpeg");
         BeanUtils.copyProperties(signUpDTO, user);
         this.userMapper.insert(user);
         return Result.success("注册成功");
@@ -77,7 +78,7 @@ public class UserController {
             map.put("token", token);
             return Result.success(map, "登录成功");
         }
-        return Result.failure("密码错误");
+        return Result.failure("帐号/密码错误");
     }
 
     @GetMapping("/api/user")

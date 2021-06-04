@@ -95,6 +95,7 @@
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -107,6 +108,34 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>wagon-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <executions>
+                    <!--自动化部署 参考：http://xxgblog.com/2015/10/23/wagon-maven-plugin/-->
+                    <!--测试服务器布署-->
+                    <execution>
+                        <id>remote-deploy</id>
+                        <!-- 运行package打包的同时运行upload-single和sshexec -->
+                        <phase>install</phase>
+                        <goals>
+                            <goal>upload-single</goal>
+                            <goal>sshexec</goal>
+                        </goals>
+                        <configuration>
+                            <serverId>breakblog-server</serverId>
+                            <fromFile>target/${project.artifactId}.jar</fromFile>
+                            <url>scp://106.53.155.82/root/dogchat</url>
+                            <commands>
+                                <command>sh /root/dogchat/run.sh</command>
+                            </commands>
+                            <!-- 显示运行命令的输出结果 -->
+                            <displayCommandOutputs>true</displayCommandOutputs>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <resources>
