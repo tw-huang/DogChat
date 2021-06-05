@@ -36,15 +36,6 @@ public class Result {
         return result;
     }
 
-    public static Result success(Integer code, String msg) {
-        Result result = new Result();
-        result.success = true;
-        result.data = null;
-        result.msg = msg;
-        result.code = code;
-        return result;
-    }
-
     public static Result success(Object data) {
         Result result = new Result();
         result.success = true;
