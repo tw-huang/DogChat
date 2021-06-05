@@ -31,9 +31,7 @@ const ChatBox: React.FC<Props> = (props) => {
 							帐号，再来愉快的聊天吧~
 						</div>
 					</>
-
 				)}
-
 			</div>
 		</div>
 	)
