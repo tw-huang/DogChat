@@ -1,12 +1,30 @@
-import React, { useEffect, useState } from 'react'
-import ChatBox from '../../components/ChatBox'
+import React, { useEffect, useRef, useState } from 'react'
 import logo from '../../assets/logo.png'
 import MsgBox from '../../components/MsgBox'
 import { wsUrl } from '../../utils/constant'
-import { getHeaderInfo } from '../../services'
+import { getHeaderInfo, getMessage } from '../../services'
 import user from '../../assets/user.png'
 // @ts-ignore
 import { Link } from 'react-router-dom'
+
+interface MsgItem {
+	body: string,
+	id: number,
+	pushTime: string,
+	quoteMessage: object,
+	quoteMessageId: number,
+	user: User
+}
+
+interface User {
+	id: number,
+	about: string,
+	avatar: string,
+	email: string,
+	github: string,
+	nickname: string,
+	website: string,
+}
 
 const Chat: React.FC = () => {
 	//是否登录
@@ -15,9 +33,16 @@ const Chat: React.FC = () => {
 	const [onlineCount, setOnlineCount] = useState<number>(0)
 	//输入框值
 	const [msgInput, setMsgInput] = useState<string>('')
+	const [ws, setWs] = useState(null)
+	const msgRef = useRef(null)
+	//消息列表
+	const [pageNo, setPageNo] = useState<number>(1)
+	const [pageSize, setPageSize] = useState<number>(20)
+	const [msgList, setMsgList] = useState<Array<MsgItem>>([])
 
 
 	useEffect(() => {
+
 		//获取在线人数和注册人数
 		const fetchData = async () => {
 			let res = await getHeaderInfo()
@@ -27,8 +52,15 @@ const Chat: React.FC = () => {
 					setOnlineCount(res.data.onlineCount)
 					setRegisterCount(res.data.registerCount)
 				}
-				return
 			}
+			let resMsg = await getMessage(pageNo, pageSize)
+			console.log(resMsg.data.records)
+			if (resMsg?.success) {
+				if (resMsg.code === 1) {
+					setMsgList(resMsg.data.records)
+				}
+			}
+			return
 		}
 		fetchData()
 
@@ -60,6 +92,7 @@ const Chat: React.FC = () => {
 						if (json.msg === 'ReceiveMessage') {
 							console.log('ReceiveMessage')
 							console.log(json.data)
+							setMsgList([...msgList, json.data])
 						}
 					}
 
@@ -67,17 +100,25 @@ const Chat: React.FC = () => {
 				ws.onclose = function() {
 					console.log('ws_onclose')
 				}
-
+				// @ts-ignore
+				setWs(ws)
 			} catch (e) {
 				console.log(e)
 			}
 		}
 	}, [])
 
+	//点击发送消息
 	const handleMsgSend = () => {
+		if (ws != null) {
+			const json = {
+				body: msgInput
+			}
+			// @ts-ignore
+			ws.send(JSON.stringify(json))
+		}
 		setMsgInput('')
 	}
-
 
 	// @ts-ignore
 	// @ts-ignore
@@ -97,7 +138,7 @@ const Chat: React.FC = () => {
 					</div>
 				</div>
 			</div>
-			<MsgBox isLogin={isLogin}/>
+			<MsgBox msgList={msgList}/>
 			{/*<ChatBox isLogin={isLogin}/>*/}
 			<div className='w-screen py-4 bg-yellow-100 fixed bottom-0 left-0'>
 				<div className="flex items-center px-6">
@@ -105,9 +146,11 @@ const Chat: React.FC = () => {
 						<>
 							<img className='w-14 mr-3' src={user} alt='avatar'/>
 							<input value={msgInput || ''}
+										 ref={msgRef}
 										 onChange={(event) => setMsgInput(event.target.value)} type="text"
 										 className="w-4/12 h-14 mr-3"/>
-							<button className="bg-gray-800 text-white rounded py-1 px-2" onClick={handleMsgSend}>发 送</button>
+							<button className="bg-gray-800 text-white rounded py-1 px-2" onClick={handleMsgSend}>发 送
+							</button>
 						</>
 					) : (
 						<>
