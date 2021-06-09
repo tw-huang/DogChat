@@ -1,6 +1,7 @@
 import React from 'react'
 // @ts-ignore
 import user from '../../assets/user.png'
+import "./index.style.css"
 
 interface Props {
 	msgList: Array<MsgItem>
@@ -45,7 +46,9 @@ const MsgBox: React.FC<Props> = (props) => {
 	})
 	return (
 		<div className="py-20 chat-box">
-			{msgItem}
+			<div className="msgBox">
+				{msgItem}
+			</div>
 		</div>
 	)
 }

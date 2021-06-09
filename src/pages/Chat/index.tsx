@@ -90,9 +90,9 @@ const Chat: React.FC = () => {
 							}
 						}
 						if (json.msg === 'ReceiveMessage') {
-							console.log('ReceiveMessage')
-							console.log(json.data)
-							setMsgList([...msgList, json.data])
+							// console.log('ReceiveMessage')
+							// console.log(json.data)
+							setMsgList(list => [...list, json.data])
 						}
 					}
 
@@ -120,8 +120,6 @@ const Chat: React.FC = () => {
 		setMsgInput('')
 	}
 
-	// @ts-ignore
-	// @ts-ignore
 	return (
 		<>
 			<div className="w-screen py-4 bg-yellow-100 fixed">
@@ -138,8 +136,8 @@ const Chat: React.FC = () => {
 					</div>
 				</div>
 			</div>
+			{/*信息列表*/}
 			<MsgBox msgList={msgList}/>
-			{/*<ChatBox isLogin={isLogin}/>*/}
 			<div className='w-screen py-4 bg-yellow-100 fixed bottom-0 left-0'>
 				<div className="flex items-center px-6">
 					{isLogin ? (
