@@ -122,49 +122,48 @@ const Chat: React.FC = () => {
 
 	return (
 		<>
-			<div className="w-screen py-4 bg-yellow-100 fixed">
-				<div className="flex justify-between px-6">
-					<div className="flex items-center">
-						<img className='w-8 mr-1' src={logo} alt='logo'/>
-						<span className="pl-3">DogChat</span>
-						<span className="px-3">{onlineCount}/{registerCount}</span>
-						<span>About</span>
-					</div>
-					<div className="flex items-center">
-						<span className="pr-3">Profile</span>
-						<span>Logout</span>
-					</div>
+			<div className="flex justify-between px-6 w-screen h-12 fixed bg-yellow-100">
+				<div className="flex items-center">
+					<img className='w-8 mr-1' src={logo} alt='logo'/>
+					<span className="pl-3">DogChat</span>
+					<span className="px-3">{onlineCount}/{registerCount}</span>
+					<span>About</span>
+				</div>
+				<div className="flex items-center">
+					<span className="pr-3">Profile</span>
+					<span>Logout</span>
 				</div>
 			</div>
 			{/*信息列表*/}
-			<MsgBox msgList={msgList}/>
-			<div className='w-screen py-4 bg-yellow-100 fixed bottom-0 left-0'>
-				<div className="flex items-center px-6">
-					{isLogin ? (
-						<>
-							<img className='w-14 mr-3' src={user} alt='avatar'/>
-							<input value={msgInput || ''}
-										 ref={msgRef}
-										 onChange={(event) => setMsgInput(event.target.value)} type="text"
-										 className="w-4/12 h-14 mr-3"/>
-							<button className="bg-gray-800 text-white rounded py-1 px-2" onClick={handleMsgSend}>发 送
-							</button>
-						</>
-					) : (
-						<>
-							<div>Hello! 请先
-								<Link to='/login'>
-									<span className='hover:text-gray-900 hover:underline'> 登录 </span>
-								</Link>
-								或者
-								<Link to='/register'>
-									<span className='hover:text-gray-900 hover:underline'> 注册 </span>
-								</Link>
-								帐号，再来愉快的聊天吧~
-							</div>
-						</>
-					)}
-				</div>
+			<div className="pt-12 pb-20">
+				<MsgBox msgList={msgList}/>
+			</div>
+			{/**/}
+			<div className='flex items-center px-6 w-screen fixed bottom-0 left-0 h-20 bg-yellow-100'>
+				{isLogin ? (
+					<>
+						<img className='w-14 mr-3' src={user} alt='avatar'/>
+						<input value={msgInput || ''}
+									 ref={msgRef}
+									 onChange={(event) => setMsgInput(event.target.value)} type="text"
+									 className="w-4/12 h-14 mr-3"/>
+						<button className="bg-gray-800 text-white rounded py-1 px-2" onClick={handleMsgSend}>发 送
+						</button>
+					</>
+				) : (
+					<>
+						<div>Hello! 请先
+							<Link to='/login'>
+								<span className='hover:text-gray-900 hover:underline'> 登录 </span>
+							</Link>
+							或者
+							<Link to='/register'>
+								<span className='hover:text-gray-900 hover:underline'> 注册 </span>
+							</Link>
+							帐号，再来愉快的聊天吧~
+						</div>
+					</>
+				)}
 			</div>
 		</>
 	)
