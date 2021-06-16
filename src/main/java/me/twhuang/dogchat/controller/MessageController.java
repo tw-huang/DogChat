@@ -29,7 +29,7 @@ public class MessageController {
                               @RequestParam(required = false, defaultValue = "20") Integer pageSize) {
         Page<Message> page = new Page<>(pageNo, pageSize);
         Page<Message> result = this.messageMapper.selectPage(page, new QueryWrapper<Message>().lambda()
-                .eq(Message::getDelFlag, false));
+                .eq(Message::getDelFlag, false).orderByDesc(Message::getPushTime));
         result.getRecords().forEach(x -> {
             User user = this.userMapper.selectById(x.getUserId());
             x.setUser(user);
