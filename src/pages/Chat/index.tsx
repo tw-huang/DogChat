@@ -4,8 +4,10 @@ import MsgBox from '../../components/MsgBox'
 import { wsUrl } from '../../utils/constant'
 import { getHeaderInfo, getMessage } from '../../services'
 import user from '../../assets/user.png'
+import './index.style.css'
 // @ts-ignore
 import { Link } from 'react-router-dom'
+import { list } from 'postcss'
 
 interface MsgItem {
 	body: string,
@@ -34,12 +36,12 @@ const Chat: React.FC = () => {
 	//输入框值
 	const [msgInput, setMsgInput] = useState<string>('')
 	const [ws, setWs] = useState(null)
-	const msgRef = useRef(null)
 	//消息列表
-	const [pageNo, setPageNo] = useState<number>(1)
-	const [pageSize, setPageSize] = useState<number>(20)
+	const [pageNo] = useState<number>(1)
+	const [pageSize] = useState<number>(11)
 	const [msgList, setMsgList] = useState<Array<MsgItem>>([])
 
+	const msgBoxRef = useRef(null)
 
 	useEffect(() => {
 
@@ -54,10 +56,14 @@ const Chat: React.FC = () => {
 				}
 			}
 			let resMsg = await getMessage(pageNo, pageSize)
-			console.log(resMsg.data.records)
+			// console.log(resMsg.data.records)
 			if (resMsg?.success) {
 				if (resMsg.code === 1) {
-					setMsgList(resMsg.data.records)
+					setMsgList(resMsg.data.records.reverse())
+					const msgBoxId = document.getElementById('msgBox')
+					if (msgBoxId != null) {
+						msgBoxId.scrollTop = msgBoxId.scrollHeight
+					}
 				}
 			}
 			return
@@ -70,7 +76,7 @@ const Chat: React.FC = () => {
 			try {
 				let ws = new WebSocket(wsUrl + '/api/user/' + token)
 				ws.onopen = function() {
-					console.log('ws_onopen')
+					// console.log('ws_onopen')
 				}
 				ws.onmessage = function(evt) {
 					var json = JSON.parse(evt.data)
@@ -78,14 +84,14 @@ const Chat: React.FC = () => {
 						if (json.msg === 'ConnectSuccess') {
 							// console.log('ConnectSuccess')
 							if (json.data) {
-								console.log('Connect -> online')
+								// console.log('Connect -> online')
 								setOnlineCount(json.data)
 							}
 						}
 						if (json.msg === 'ConnectClose') {
-							console.log('ConnectClose')
+							// console.log('ConnectClose')
 							if (json.data) {
-								console.log('close -> online')
+								// console.log('close -> online')
 								setOnlineCount(json.data)
 							}
 						}
@@ -93,12 +99,16 @@ const Chat: React.FC = () => {
 							// console.log('ReceiveMessage')
 							// console.log(json.data)
 							setMsgList(list => [...list, json.data])
+							const msgBoxId = document.getElementById('msgBox')
+							if (msgBoxId != null) {
+								msgBoxId.scrollTop = msgBoxId.scrollHeight
+							}
 						}
 					}
 
 				}
 				ws.onclose = function() {
-					console.log('ws_onclose')
+					// console.log('ws_onclose')
 				}
 				// @ts-ignore
 				setWs(ws)
@@ -106,7 +116,35 @@ const Chat: React.FC = () => {
 				console.log(e)
 			}
 		}
+
+		// @ts-ignore
+		msgBoxRef.current?.addEventListener('scroll', () => {
+			// @ts-ignore
+			const scrollHeight = msgBoxRef.current.scrollHeight
+			// @ts-ignore
+			const scrollTop = msgBoxRef.current.scrollTop
+			// console.log(scrollHeight + ' - ' + scrollTop)
+			if (scrollTop == 0) {
+				console.log('-----> top -----> ')
+				console.log(pageNo + 1)
+				//获取在线人数和注册人数
+				const fetchData = async () => {
+					let resMsg = await getMessage(pageNo + 1, pageSize)
+					console.log(resMsg.data.records.reverse())
+					if (resMsg?.success) {
+						if (resMsg.code === 1) {
+							console.log(msgList)
+							// setMsgList(list => [resMsg.data.records.reverse(), ...list])
+						}
+					}
+					return
+				}
+				fetchData()
+			}
+		})
+
 	}, [])
+
 
 	//点击发送消息
 	const handleMsgSend = () => {
@@ -136,7 +174,9 @@ const Chat: React.FC = () => {
 			</div>
 			{/*信息列表*/}
 			<div className="pt-12 pb-20">
-				<MsgBox msgList={msgList}/>
+				<div className="msgBox" id="msgBox" ref={msgBoxRef}>
+					<MsgBox msgList={msgList}/>
+				</div>
 			</div>
 			{/**/}
 			<div className='flex items-center px-6 w-screen fixed bottom-0 left-0 h-20 bg-yellow-100'>
@@ -144,7 +184,6 @@ const Chat: React.FC = () => {
 					<>
 						<img className='w-14 mr-3' src={user} alt='avatar'/>
 						<input value={msgInput || ''}
-									 ref={msgRef}
 									 onChange={(event) => setMsgInput(event.target.value)} type="text"
 									 className="w-4/12 h-14 mr-3"/>
 						<button className="bg-gray-800 text-white rounded py-1 px-2" onClick={handleMsgSend}>发 送

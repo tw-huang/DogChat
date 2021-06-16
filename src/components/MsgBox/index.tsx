@@ -1,7 +1,5 @@
 import React from 'react'
-// @ts-ignore
 import user from '../../assets/user.png'
-import './index.style.css'
 
 interface Props {
 	msgList: Array<MsgItem>
@@ -36,7 +34,7 @@ const MsgBox: React.FC<Props> = (props) => {
 				<div className="msg-box flex py-2">
 					<img className='w-14 h-14 mr-3' src={user} alt='avatar'/>
 					<div className="flex flex-col bg-gray-100 p-3">
-						<div className="flex items-center text-xs">{msg.user.nickname}<span
+						<div className="flex items-center text-xs">{msg.user?.nickname || ''}<span
 							className="font-light pl-2">{msg.pushTime}</span></div>
 						<span className="text-xl">{msg.body}</span>
 					</div>
@@ -45,9 +43,9 @@ const MsgBox: React.FC<Props> = (props) => {
 		)
 	})
 	return (
-		<div className="msgBox">
+		<>
 			{msgItem}
-		</div>
+		</>
 	)
 }
 
