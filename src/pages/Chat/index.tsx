@@ -7,7 +7,6 @@ import user from '../../assets/user.png'
 import './index.style.css'
 // @ts-ignore
 import { Link } from 'react-router-dom'
-import { list } from 'postcss'
 
 interface MsgItem {
 	body: string,
@@ -37,11 +36,64 @@ const Chat: React.FC = () => {
 	const [msgInput, setMsgInput] = useState<string>('')
 	const [ws, setWs] = useState(null)
 	//消息列表
-	const [pageNo] = useState<number>(1)
-	const [pageSize] = useState<number>(11)
+	const [pageNo, setPageNo] = useState<number>(1)
+	const [pageSize] = useState<number>(12)
 	const [msgList, setMsgList] = useState<Array<MsgItem>>([])
+	//是否还有数据
+	const [hasMsg, setHasMsg] = useState<boolean>(false)
 
 	const msgBoxRef = useRef(null)
+
+	// @ts-ignore
+	msgBoxRef.current?.addEventListener('scroll', () => {
+		// @ts-ignore
+		const scrollHeight = msgBoxRef.current.scrollHeight
+		// @ts-ignore
+		const scrollTop = msgBoxRef.current.scrollTop
+		// console.log(scrollHeight + ' - ' + scrollTop)
+		if (scrollTop == 0) {
+			if (hasMsg){
+				console.log("aaa")
+				setPageNo(pageNo + 1)
+			}
+		}
+	})
+
+	//消息列表
+	useEffect(() => {
+		const fetchData = async () => {
+			let resMsg = await getMessage(pageNo, pageSize)
+			if (resMsg?.success) {
+				if (resMsg.code === 1 && resMsg.data.records != []) {
+					if (pageNo < resMsg.data.pages) {
+						setHasMsg(true)
+						console.log("11")
+					}else {
+						setHasMsg(false)
+						console.log("22")
+					}
+					const msg = resMsg.data.records.reverse()
+					if (msgList.length == 0) {
+						setMsgList(msg)
+						const msgBoxId = document.getElementById('msgBox')
+						if (msgBoxId != null) {
+							msgBoxId.scrollTop = msgBoxId.scrollHeight
+						}
+					} else {
+						setMsgList(list => [...msg, ...list])
+						// const msgBoxId = document.getElementById('msgBox')
+						// if (msgBoxId != null) {
+						// 	msgBoxId.scrollTop = msgBoxId.scrollHeight
+						// }
+					}
+
+				}
+			}
+			return
+		}
+		fetchData()
+	}, [pageNo])
+
 
 	useEffect(() => {
 
@@ -53,17 +105,6 @@ const Chat: React.FC = () => {
 				if (res.code === 1) {
 					setOnlineCount(res.data.onlineCount)
 					setRegisterCount(res.data.registerCount)
-				}
-			}
-			let resMsg = await getMessage(pageNo, pageSize)
-			// console.log(resMsg.data.records)
-			if (resMsg?.success) {
-				if (resMsg.code === 1) {
-					setMsgList(resMsg.data.records.reverse())
-					const msgBoxId = document.getElementById('msgBox')
-					if (msgBoxId != null) {
-						msgBoxId.scrollTop = msgBoxId.scrollHeight
-					}
 				}
 			}
 			return
@@ -116,32 +157,6 @@ const Chat: React.FC = () => {
 				console.log(e)
 			}
 		}
-
-		// @ts-ignore
-		msgBoxRef.current?.addEventListener('scroll', () => {
-			// @ts-ignore
-			const scrollHeight = msgBoxRef.current.scrollHeight
-			// @ts-ignore
-			const scrollTop = msgBoxRef.current.scrollTop
-			// console.log(scrollHeight + ' - ' + scrollTop)
-			if (scrollTop == 0) {
-				console.log('-----> top -----> ')
-				console.log(pageNo + 1)
-				//获取在线人数和注册人数
-				const fetchData = async () => {
-					let resMsg = await getMessage(pageNo + 1, pageSize)
-					console.log(resMsg.data.records.reverse())
-					if (resMsg?.success) {
-						if (resMsg.code === 1) {
-							console.log(msgList)
-							// setMsgList(list => [resMsg.data.records.reverse(), ...list])
-						}
-					}
-					return
-				}
-				fetchData()
-			}
-		})
 
 	}, [])
 
