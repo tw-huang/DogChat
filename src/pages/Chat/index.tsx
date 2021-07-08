@@ -40,62 +40,24 @@ const Chat: React.FC = () => {
 	const [pageSize] = useState<number>(12)
 	const [msgList, setMsgList] = useState<Array<MsgItem>>([])
 	//是否还有数据
-	const [hasMsg, setHasMsg] = useState<boolean>(false)
+	const [hasMsg, setHasMsg] = useState<boolean>(true)
 
 	const msgBoxRef = useRef(null)
 
-	// @ts-ignore
-	msgBoxRef.current?.addEventListener('scroll', () => {
+	//初始化
+	useEffect(() => {
 		// @ts-ignore
-		const scrollHeight = msgBoxRef.current.scrollHeight
-		// @ts-ignore
-		const scrollTop = msgBoxRef.current.scrollTop
-		// console.log(scrollHeight + ' - ' + scrollTop)
-		if (scrollTop == 0) {
-			if (hasMsg){
-				console.log("aaa")
+		msgBoxRef.current?.addEventListener('scroll', () => {
+			// @ts-ignore
+			const scrollHeight = msgBoxRef.current.scrollHeight
+			// @ts-ignore
+			const scrollTop = msgBoxRef.current.scrollTop
+			// console.log(scrollHeight + ' - ' + scrollTop)
+			if (scrollTop == 0 && hasMsg) {
 				setPageNo(pageNo + 1)
+				console.log('hasMsg:' + hasMsg + 'pageNo:' + pageNo)
 			}
-		}
-	})
-
-	//消息列表
-	useEffect(() => {
-		const fetchData = async () => {
-			let resMsg = await getMessage(pageNo, pageSize)
-			if (resMsg?.success) {
-				if (resMsg.code === 1 && resMsg.data.records != []) {
-					if (pageNo < resMsg.data.pages) {
-						setHasMsg(true)
-						console.log("11")
-					}else {
-						setHasMsg(false)
-						console.log("22")
-					}
-					const msg = resMsg.data.records.reverse()
-					if (msgList.length == 0) {
-						setMsgList(msg)
-						const msgBoxId = document.getElementById('msgBox')
-						if (msgBoxId != null) {
-							msgBoxId.scrollTop = msgBoxId.scrollHeight
-						}
-					} else {
-						setMsgList(list => [...msg, ...list])
-						// const msgBoxId = document.getElementById('msgBox')
-						// if (msgBoxId != null) {
-						// 	msgBoxId.scrollTop = msgBoxId.scrollHeight
-						// }
-					}
-
-				}
-			}
-			return
-		}
-		fetchData()
-	}, [pageNo])
-
-
-	useEffect(() => {
+		})
 
 		//获取在线人数和注册人数
 		const fetchData = async () => {
@@ -160,6 +122,41 @@ const Chat: React.FC = () => {
 
 	}, [])
 
+	//消息列表
+	useEffect(() => {
+		const fetchData = async () => {
+			let resMsg = await getMessage(pageNo, pageSize)
+			if (resMsg?.success) {
+				if (resMsg.code === 1 && resMsg.data.records != []) {
+					const msg = resMsg.data.records.reverse()
+					if (msgList.length == 0) {
+						setMsgList(msg)
+						const msgBoxId = document.getElementById('msgBox')
+						if (msgBoxId != null) {
+							msgBoxId.scrollTop = msgBoxId.scrollHeight
+						}
+					} else {
+						setMsgList(list => [...msg, ...list])
+						// const msgBoxId = document.getElementById('msgBox')
+						// if (msgBoxId != null) {
+						// 	msgBoxId.scrollTop = msgBoxId.scrollHeight
+						// }
+					}
+
+					if (pageNo < resMsg.data.pages) {
+						setHasMsg(true)
+						// console.log('ahasMsg:' + hasMsg + '  pageNo:' + pageNo)
+					} else {
+						setHasMsg(false)
+						// console.log('ahasMsg:' + hasMsg + '  pageNo:' + pageNo)
+					}
+
+				}
+			}
+			return
+		}
+		fetchData()
+	}, [pageNo])
 
 	//点击发送消息
 	const handleMsgSend = () => {
