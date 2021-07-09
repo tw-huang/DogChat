@@ -36,43 +36,31 @@ const Chat: React.FC = () => {
 	const [msgInput, setMsgInput] = useState<string>('')
 	const [ws, setWs] = useState(null)
 	//消息列表
-	const [pageNo, setPageNo] = useState<number>(1)
 	const [pageSize] = useState<number>(12)
 	const [msgList, setMsgList] = useState<Array<MsgItem>>([])
 	//是否还有数据
 	const [hasMsg, setHasMsg] = useState<boolean>(true)
+	const pageNo = useRef(1)
+
+	const [isLoading, setIsLoading] = useState(false)
 
 	const msgBoxRef = useRef(null)
 
-	//初始化
-	useEffect(() => {
-		// @ts-ignore
-		msgBoxRef.current?.addEventListener('scroll', () => {
-			// @ts-ignore
-			const scrollHeight = msgBoxRef.current.scrollHeight
-			// @ts-ignore
-			const scrollTop = msgBoxRef.current.scrollTop
-			// console.log(scrollHeight + ' - ' + scrollTop)
-			if (scrollTop == 0 && hasMsg) {
-				setPageNo(pageNo + 1)
-				console.log('hasMsg:' + hasMsg + 'pageNo:' + pageNo)
+	// 获取列表数据
+	const getList = (val: number) => {
+		getMessage(val, pageSize).then(res => {
+			const { success, code, data } = res
+			if (success && code === 1) {
+				if (val > data.pages) return setHasMsg(false)
+				const newData = data?.records.reverse()
+				setMsgList(p => newData.concat(p))
 			}
 		})
+	}
 
-		//获取在线人数和注册人数
-		const fetchData = async () => {
-			let res = await getHeaderInfo()
-			// console.log(res)
-			if (res?.success) {
-				if (res.code === 1) {
-					setOnlineCount(res.data.onlineCount)
-					setRegisterCount(res.data.registerCount)
-				}
-			}
-			return
-		}
-		fetchData()
 
+	// 连接socket
+	const connectSocket = () => {
 		let token = localStorage.getExpire('Token')
 		if (token) {
 			setIsLogin(true)
@@ -119,44 +107,20 @@ const Chat: React.FC = () => {
 				console.log(e)
 			}
 		}
+	}
 
-	}, [])
-
-	//消息列表
-	useEffect(() => {
-		const fetchData = async () => {
-			let resMsg = await getMessage(pageNo, pageSize)
-			if (resMsg?.success) {
-				if (resMsg.code === 1 && resMsg.data.records != []) {
-					const msg = resMsg.data.records.reverse()
-					if (msgList.length == 0) {
-						setMsgList(msg)
-						const msgBoxId = document.getElementById('msgBox')
-						if (msgBoxId != null) {
-							msgBoxId.scrollTop = msgBoxId.scrollHeight
-						}
-					} else {
-						setMsgList(list => [...msg, ...list])
-						// const msgBoxId = document.getElementById('msgBox')
-						// if (msgBoxId != null) {
-						// 	msgBoxId.scrollTop = msgBoxId.scrollHeight
-						// }
-					}
-
-					if (pageNo < resMsg.data.pages) {
-						setHasMsg(true)
-						// console.log('ahasMsg:' + hasMsg + '  pageNo:' + pageNo)
-					} else {
-						setHasMsg(false)
-						// console.log('ahasMsg:' + hasMsg + '  pageNo:' + pageNo)
-					}
-
-				}
+	//获取在线人数和注册人数
+	const fetchData = async () => {
+		// @ts-ignore
+		let res = await getHeaderInfo()
+		// console.log(res)
+		if (res?.success) {
+			if (res.code === 1) {
+				setOnlineCount(res.data.onlineCount)
+				setRegisterCount(res.data.registerCount)
 			}
-			return
 		}
-		fetchData()
-	}, [pageNo])
+	}
 
 	//点击发送消息
 	const handleMsgSend = () => {
@@ -169,6 +133,35 @@ const Chat: React.FC = () => {
 		}
 		setMsgInput('')
 	}
+
+	const getScrollData = () => {
+		// @ts-ignore
+		const scrollTop = msgBoxRef.current.scrollTop
+		if (scrollTop === 0 && hasMsg) {
+			// @ts-ignore
+			msgBoxRef.current.scrollTop = 50
+			getList(++pageNo.current)
+		}
+	}
+
+	useEffect(() => {
+
+		fetchData()
+		connectSocket()
+		getList(1)
+		// @ts-ignore
+		msgBoxRef.current.scrollTop = msgBoxRef.current.offsetHeight
+		setIsLoading(p => !p)
+	}, [])
+
+	useEffect(() => {
+		// @ts-ignore
+		msgBoxRef.current?.addEventListener('scroll', getScrollData)
+		return () => {
+			// @ts-ignore
+			msgBoxRef.current?.removeEventListener('scroll', getScrollData)
+		}
+	}, [hasMsg])
 
 	return (
 		<>
