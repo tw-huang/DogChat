@@ -111,7 +111,7 @@ public class WebSocket {
                 Message message = messageMapper.selectById(msg.getQuoteMessageId());
                 msg.setQuoteMessage(message);
             }
-            sendMessageToAll(JSON.toJSONString(Result.success(msg, "ReceiveMessage"), SerializerFeature.WriteMapNullValue));
+            sendMessageToAll(JSON.toJSONString(Result.success(msg, "ReceiveMessage"), SerializerFeature.WriteMapNullValue, SerializerFeature.WriteDateUseDateFormat));
         } catch (Exception e) {
             e.printStackTrace();
             log.info("用户Id发送:" + userId + ",参数错误");
