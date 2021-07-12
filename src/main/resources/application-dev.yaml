@@ -10,7 +10,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: breakblog
-    url: jdbc:mysql://106.53.155.82:3306/dogchat?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://106.53.155.82:3306/dogchat?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
     platform: mysql
     druid:
       initial-size: 5
