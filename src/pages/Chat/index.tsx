@@ -36,28 +36,27 @@ const Chat: React.FC = () => {
 	const [msgInput, setMsgInput] = useState<string>('')
 	const [ws, setWs] = useState(null)
 	//消息列表
+	const pageNo = useRef(1)
 	const [pageSize] = useState<number>(12)
 	const [msgList, setMsgList] = useState<Array<MsgItem>>([])
 	//是否还有数据
 	const [hasMsg, setHasMsg] = useState<boolean>(true)
-	const pageNo = useRef(1)
-
 	const [isLoading, setIsLoading] = useState(false)
-
 	const msgBoxRef = useRef(null)
 
-	// 获取列表数据
-	const getList = (val: number) => {
+	// 获取消息列表数据
+	const getMsgList = (val: number) => {
 		getMessage(val, pageSize).then(res => {
 			const { success, code, data } = res
 			if (success && code === 1) {
 				if (val > data.pages) return setHasMsg(false)
 				const newData = data?.records.reverse()
 				setMsgList(p => newData.concat(p))
+				// @ts-ignore
+				msgBoxRef.current.scrollTop = msgBoxRef.current.offsetHeight
 			}
 		})
 	}
-
 
 	// 连接socket
 	const connectSocket = () => {
@@ -110,15 +109,12 @@ const Chat: React.FC = () => {
 	}
 
 	//获取在线人数和注册人数
-	const fetchData = async () => {
+	const getHeaderData = async () => {
 		// @ts-ignore
 		let res = await getHeaderInfo()
-		// console.log(res)
-		if (res?.success) {
-			if (res.code === 1) {
-				setOnlineCount(res.data.onlineCount)
-				setRegisterCount(res.data.registerCount)
-			}
+		if (res?.success && res.code === 1) {
+			setOnlineCount(res.data.onlineCount)
+			setRegisterCount(res.data.registerCount)
 		}
 	}
 
@@ -138,19 +134,14 @@ const Chat: React.FC = () => {
 		// @ts-ignore
 		const scrollTop = msgBoxRef.current.scrollTop
 		if (scrollTop === 0 && hasMsg) {
-			// @ts-ignore
-			msgBoxRef.current.scrollTop = 50
-			getList(++pageNo.current)
+			getMsgList(++pageNo.current)
 		}
 	}
 
 	useEffect(() => {
-
-		fetchData()
+		getHeaderData()
 		connectSocket()
-		getList(1)
-		// @ts-ignore
-		msgBoxRef.current.scrollTop = msgBoxRef.current.offsetHeight
+		getMsgList(1)
 		setIsLoading(p => !p)
 	}, [])
 
