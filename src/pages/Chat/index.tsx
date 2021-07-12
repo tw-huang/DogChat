@@ -156,7 +156,7 @@ const Chat: React.FC = () => {
 
 	return (
 		<>
-			<div className="flex justify-between px-6 w-screen h-12 fixed bg-yellow-100">
+			<div className="flex justify-between px-6 w-screen h-12 fixed border-b-2 border-gray-300 ">
 				<div className="flex items-center">
 					<img className='w-8 mr-1' src={logo} alt='logo'/>
 					<span className="pl-3">DogChat</span>
@@ -175,13 +175,13 @@ const Chat: React.FC = () => {
 				</div>
 			</div>
 			{/**/}
-			<div className='flex items-center px-6 w-screen fixed bottom-0 left-0 h-20 bg-yellow-100'>
+			<div className='flex items-center px-6 w-screen fixed bottom-0 left-0 h-20 border-t-2 border-gray-300'>
 				{isLogin ? (
 					<>
 						<img className='w-14 mr-3' src={user} alt='avatar'/>
 						<input value={msgInput || ''}
 									 onChange={(event) => setMsgInput(event.target.value)} type="text"
-									 className="w-4/12 h-14 mr-3"/>
+									 className="border-2 border-gray-100 w-4/12 h-14 mr-3 px-3"/>
 						<button className="bg-gray-800 text-white rounded py-1 px-2" onClick={handleMsgSend}>发 送
 						</button>
 					</>
