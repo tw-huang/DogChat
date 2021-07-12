@@ -13,9 +13,9 @@ export async function signUp(
 		data: {
 			nickname: nickname,
 			email: email,
-			password: password,
+			password: password
 		},
-		headers: { 'Content-Type': 'application/json' },
+		headers: { 'Content-Type': 'application/json' }
 	})
 		.then((res) => {
 			return res.data
@@ -32,9 +32,9 @@ export async function signIn(email: string, password: string) {
 		method: 'post',
 		data: {
 			email: email,
-			password: password,
+			password: password
 		},
-		headers: { 'Content-Type': 'application/json' },
+		headers: { 'Content-Type': 'application/json' }
 	})
 		.then((res) => {
 			return res.data
@@ -51,8 +51,8 @@ export async function getUser() {
 		method: 'get',
 		headers: {
 			'Content-Type': 'application/json',
-			'Token': localStorage.getExpire('Token'),
-		},
+			'Token': localStorage.getExpire('Token')
+		}
 	})
 		.then((res) => {
 			return res.data
@@ -70,10 +70,12 @@ export async function putUser(github: string, website: string, about: string) {
 		data: {
 			github: github,
 			website: website,
-			about: about,
+			about: about
 		},
-		headers: { 'Content-Type': 'application/json',
-			'Token': localStorage.getExpire('Token')},
+		headers: {
+			'Content-Type': 'application/json',
+			'Token': localStorage.getExpire('Token')
+		}
 	})
 		.then((res) => {
 			return res.data
@@ -87,7 +89,7 @@ export async function putUser(github: string, website: string, about: string) {
 export async function getHeaderInfo() {
 	return axios({
 		url: baseUrl + '/api/signUp',
-		method: 'get',
+		method: 'get'
 	})
 		.then((res) => {
 			return res.data
@@ -98,14 +100,15 @@ export async function getHeaderInfo() {
 }
 
 // 获取消息列表
-export async function getMessage(pageNo: number, pageSize: number) {
+export async function getMessage(dateTime: string, pageNo: number, pageSize: number) {
 	return axios({
 		url: baseUrl + '/api/message',
 		method: 'get',
 		params: {
+			dateTime: dateTime,
 			pageNo: pageNo,
-			pageSize: pageSize,
-		},
+			pageSize: pageSize
+		}
 	})
 		.then((res) => {
 			return res.data

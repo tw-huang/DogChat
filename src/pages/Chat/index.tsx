@@ -44,9 +44,12 @@ const Chat: React.FC = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const msgBoxRef = useRef(null)
 
+	//获取消息数据时的时间戳
+	const dateTime = new Date().getTime().toString()
+
 	// 获取消息列表数据
 	const getMsgList = (val: number) => {
-		getMessage(val, pageSize).then(res => {
+		getMessage(dateTime, val, pageSize).then(res => {
 			const { success, code, data } = res
 			if (success && code === 1) {
 				if (val > data.pages) return setHasMsg(false)
