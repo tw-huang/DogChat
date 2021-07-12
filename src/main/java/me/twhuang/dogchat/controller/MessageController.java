@@ -1,6 +1,7 @@
 package me.twhuang.dogchat.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.AllArgsConstructor;
@@ -25,11 +26,15 @@ public class MessageController {
     private UserMapper userMapper;
 
     @GetMapping("/api/message")
-    public Result messagePage(@RequestParam(required = false, defaultValue = "1") Integer pageNo,
+    public Result messagePage(@RequestParam String dateTime,
+                              @RequestParam(required = false, defaultValue = "1") Integer pageNo,
                               @RequestParam(required = false, defaultValue = "20") Integer pageSize) {
+        System.out.println(dateTime);
         Page<Message> page = new Page<>(pageNo, pageSize);
-        Page<Message> result = this.messageMapper.selectPage(page, new QueryWrapper<Message>().lambda()
-                .eq(Message::getDelFlag, false).orderByDesc(Message::getPushTime));
+        LambdaQueryWrapper<Message> qw = new QueryWrapper<Message>().lambda()
+                .eq(Message::getDelFlag, false).lt(Message::getPushTime, new Date(Long.parseLong(dateTime)))
+                .orderByDesc(Message::getPushTime);
+        Page<Message> result = this.messageMapper.selectPage(page, qw);
         result.getRecords().forEach(x -> {
             User user = this.userMapper.selectById(x.getUserId());
             x.setUser(user);
