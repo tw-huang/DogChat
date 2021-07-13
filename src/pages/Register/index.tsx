@@ -59,7 +59,7 @@ const Register: React.FC = () => {
 					<div className='flex flex-col mb-2'>
 						<label className='text-sm mb-1'>昵称</label>
 						<input
-							className='border-2 rounded w-64 p-1'
+							className='border-2 rounded w-64 py-1 px-2'
 							type='text'
 							name='nickname'
 							value={nickname}
@@ -69,7 +69,7 @@ const Register: React.FC = () => {
 					<div className='flex flex-col mb-2'>
 						<label className='text-sm mb-1'>邮箱</label>
 						<input
-							className='border-2 rounded w-64 p-1'
+							className='border-2 rounded w-64 py-1 px-2'
 							type='text'
 							name='email'
 							value={email}
@@ -79,7 +79,7 @@ const Register: React.FC = () => {
 					<div className='flex flex-col mb-2'>
 						<label className='text-sm mb-1'>密码</label>
 						<input
-							className='border-2 rounded w-64 p-1'
+							className='border-2 rounded w-64 py-1 px-2'
 							type='password'
 							name='password'
 							value={password}
@@ -89,7 +89,7 @@ const Register: React.FC = () => {
 					<div className='flex flex-col mb-2'>
 						<label className='text-sm mb-1'>重复密码</label>
 						<input
-							className='border-2 rounded w-64 p-1'
+							className='border-2 rounded w-64 py-1 px-2'
 							type='password'
 							name='password2'
 							value={password2}

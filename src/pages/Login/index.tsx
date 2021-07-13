@@ -54,7 +54,7 @@ const Login: React.FC = () => {
 					<div className='flex flex-col mb-2'>
 						<label className='text-sm mb-1'>邮箱</label>
 						<input
-							className='border-2 rounded w-64 p-1'
+							className='border-2 rounded w-64 py-1 px-2'
 							type='text'
 							name='email'
 							value={email}
@@ -64,7 +64,7 @@ const Login: React.FC = () => {
 					<div className='flex flex-col mb-2'>
 						<label className='text-sm mb-1'>密码</label>
 						<input
-							className='border-2 rounded w-64 p-1'
+							className='border-2 rounded w-64 py-1 px-2'
 							type='password'
 							name='password'
 							value={password}

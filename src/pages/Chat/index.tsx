@@ -9,22 +9,22 @@ import './index.style.css'
 import { Link } from 'react-router-dom'
 
 interface MsgItem {
-	body: string,
-	id: number,
-	pushTime: string,
-	quoteMessage: object,
-	quoteMessageId: number,
+	body: string
+	id: number
+	pushTime: string
+	quoteMessage: object
+	quoteMessageId: number
 	user: User
 }
 
 interface User {
-	id: number,
-	about: string,
-	avatar: string,
-	email: string,
-	github: string,
-	nickname: string,
-	website: string,
+	id: number
+	about: string
+	avatar: string
+	email: string
+	github: string
+	nickname: string
+	website: string
 }
 
 const Chat: React.FC = () => {
@@ -49,12 +49,12 @@ const Chat: React.FC = () => {
 
 	// 获取消息列表数据
 	const getMsgList = (val: number) => {
-		getMessage(dateTime, val, pageSize).then(res => {
+		getMessage(dateTime, val, pageSize).then((res) => {
 			const { success, code, data } = res
 			if (success && code === 1) {
 				if (val > data.pages) return setHasMsg(false)
 				const newData = data?.records.reverse()
-				setMsgList(p => newData.concat(p))
+				setMsgList((p) => newData.concat(p))
 				// @ts-ignore
 				msgBoxRef.current.scrollTop = msgBoxRef.current.offsetHeight
 			}
@@ -68,10 +68,10 @@ const Chat: React.FC = () => {
 			setIsLogin(true)
 			try {
 				let ws = new WebSocket(wsUrl + '/api/user/' + token)
-				ws.onopen = function() {
+				ws.onopen = function () {
 					// console.log('ws_onopen')
 				}
-				ws.onmessage = function(evt) {
+				ws.onmessage = function (evt) {
 					var json = JSON.parse(evt.data)
 					if (json.success) {
 						if (json.msg === 'ConnectSuccess') {
@@ -91,16 +91,15 @@ const Chat: React.FC = () => {
 						if (json.msg === 'ReceiveMessage') {
 							// console.log('ReceiveMessage')
 							// console.log(json.data)
-							setMsgList(list => [...list, json.data])
+							setMsgList((list) => [...list, json.data])
 							const msgBoxId = document.getElementById('msgBox')
 							if (msgBoxId != null) {
 								msgBoxId.scrollTop = msgBoxId.scrollHeight
 							}
 						}
 					}
-
 				}
-				ws.onclose = function() {
+				ws.onclose = function () {
 					// console.log('ws_onclose')
 				}
 				// @ts-ignore
@@ -125,7 +124,7 @@ const Chat: React.FC = () => {
 	const handleMsgSend = () => {
 		if (ws != null) {
 			const json = {
-				body: msgInput
+				body: msgInput,
 			}
 			// @ts-ignore
 			ws.send(JSON.stringify(json))
@@ -145,7 +144,7 @@ const Chat: React.FC = () => {
 		getHeaderData()
 		connectSocket()
 		getMsgList(1)
-		setIsLoading(p => !p)
+		setIsLoading((p) => !p)
 	}, [])
 
 	useEffect(() => {
@@ -157,46 +156,83 @@ const Chat: React.FC = () => {
 		}
 	}, [hasMsg])
 
+	const handleLogout = () => {
+		if (isLogin) {
+			localStorage.removeItem('Token')
+			setIsLogin(false)
+		}
+	}
+
 	return (
 		<>
-			<div className="flex justify-between px-6 w-screen h-12 fixed border-b-2 border-gray-300 ">
-				<div className="flex items-center">
-					<img className='w-8 mr-1' src={logo} alt='logo'/>
-					<span className="pl-3">DogChat</span>
-					<span className="px-3">{onlineCount}/{registerCount}</span>
-					<span>About</span>
+			<div className='flex justify-between px-6 w-screen h-12 fixed border-b-2 border-gray-300 '>
+				<div className='flex items-center'>
+					<img className='w-8 mr-1' src={logo} alt='logo' />
+					<span className='pl-3'>DogChat</span>
+					<span className='px-3'>
+						{onlineCount}/{registerCount}
+					</span>
+					<Link to='/about'>
+						<span className='hover:text-gray-900 hover:underline'>About</span>
+					</Link>
 				</div>
-				<div className="flex items-center">
-					<span className="pr-3">Profile</span>
-					<span>Logout</span>
+				<div className='flex items-center'>
+					{isLogin ? (
+						<>
+							<span className='pr-3'>
+								<Link to='/profile'>
+									<span className='hover:text-gray-900 hover:underline'>
+										Profile
+									</span>
+								</Link>
+							</span>
+							<span className='hover:text-gray-900 hover:underline' onClick={() => handleLogout()}>Logout</span>
+						</>
+					) : (
+						<></>
+					)}
 				</div>
 			</div>
 			{/*信息列表*/}
-			<div className="pt-12 pb-20">
-				<div className="msgBox" id="msgBox" ref={msgBoxRef}>
-					<MsgBox msgList={msgList}/>
+			<div className='pt-12 pb-20'>
+				<div className='msgBox' id='msgBox' ref={msgBoxRef}>
+					<MsgBox msgList={msgList} />
 				</div>
 			</div>
 			{/**/}
 			<div className='flex items-center px-6 w-screen fixed bottom-0 left-0 h-20 border-t-2 border-gray-300'>
 				{isLogin ? (
 					<>
-						<img className='w-14 mr-3' src={user} alt='avatar'/>
-						<input value={msgInput || ''}
-									 onChange={(event) => setMsgInput(event.target.value)} type="text"
-									 className="border-2 border-gray-100 w-4/12 h-14 mr-3 px-3"/>
-						<button className="bg-gray-800 text-white rounded py-1 px-2" onClick={handleMsgSend}>发 送
+						<img className='w-14 mr-3' src={user} alt='avatar' />
+						<input
+							value={msgInput || ''}
+							onChange={(event) => setMsgInput(event.target.value)}
+							type='text'
+							className='border-2 border-gray-100 w-4/12 h-14 mr-3 px-3'
+						/>
+						<button
+							className='bg-gray-800 text-white rounded py-1 px-2'
+							onClick={handleMsgSend}
+						>
+							发 送
 						</button>
 					</>
 				) : (
 					<>
-						<div>Hello! 请先
+						<div>
+							Hello! 请先
 							<Link to='/login'>
-								<span className='hover:text-gray-900 hover:underline'> 登录 </span>
+								<span className='hover:text-gray-900 hover:underline'>
+									{' '}
+									登录{' '}
+								</span>
 							</Link>
 							或者
 							<Link to='/register'>
-								<span className='hover:text-gray-900 hover:underline'> 注册 </span>
+								<span className='hover:text-gray-900 hover:underline'>
+									{' '}
+									注册{' '}
+								</span>
 							</Link>
 							帐号，再来愉快的聊天吧~
 						</div>

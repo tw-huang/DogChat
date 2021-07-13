@@ -72,7 +72,7 @@ const Profile: React.FC = () => {
 					<div className='flex flex-col mb-2'>
 						<label className='text-sm mb-1'>github</label>
 						<input
-							className='border-2 rounded w-64 p-1'
+							className='border-2 rounded w-64 py-1 px-2'
 							type='text'
 							name='github'
 							value={github || ''}
@@ -82,7 +82,7 @@ const Profile: React.FC = () => {
 					<div className='flex flex-col mb-2'>
 						<label className='text-sm mb-1'>website</label>
 						<input
-							className='border-2 rounded w-64 p-1'
+							className='border-2 rounded w-64 py-1 px-2'
 							type='text'
 							name='website'
 							value={website || ''}
@@ -92,7 +92,7 @@ const Profile: React.FC = () => {
 					<div className='flex flex-col mb-2'>
 						<label className='text-sm mb-1'>关于我</label>
 						<textarea
-							className='border-2 rounded w-64 p-1'
+							className='border-2 rounded w-64 py-1 px-2'
 							name='about'
 							value={about || ''}
 							onChange={(event) => setAbout(event.target.value)}
