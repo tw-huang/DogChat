@@ -97,7 +97,7 @@ const Register: React.FC = () => {
 						/>
 					</div>
 					<div className='flex flex-col mt-6'>
-						<button className='bg-gray-800 text-white rounded py-1 px-2'>
+						<button className='bg-gray-800 text-white rounded py-1 px-2 hover:bg-gray-900'>
 							注 册
 						</button>
 					</div>

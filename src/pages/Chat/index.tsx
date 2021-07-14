@@ -37,7 +37,7 @@ const Chat: React.FC = () => {
 	const [ws, setWs] = useState(null)
 	//消息列表
 	const pageNo = useRef(1)
-	const [pageSize] = useState<number>(12)
+	const [pageSize] = useState<number>(20)
 	const [msgList, setMsgList] = useState<Array<MsgItem>>([])
 	//是否还有数据
 	const [hasMsg, setHasMsg] = useState<boolean>(true)
