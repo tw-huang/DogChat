@@ -145,6 +145,7 @@ const Chat: React.FC = () => {
 		connectSocket()
 		getMsgList(1)
 		setIsLoading((p) => !p)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	useEffect(() => {
@@ -152,8 +153,10 @@ const Chat: React.FC = () => {
 		msgBoxRef.current?.addEventListener('scroll', getScrollData)
 		return () => {
 			// @ts-ignore
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 			msgBoxRef.current?.removeEventListener('scroll', getScrollData)
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [hasMsg])
 
 	const handleLogout = () => {
@@ -186,7 +189,12 @@ const Chat: React.FC = () => {
 									</span>
 								</Link>
 							</span>
-							<span className='hover:text-gray-900 hover:underline' onClick={() => handleLogout()}>Logout</span>
+							<span
+								className='hover:text-gray-900 hover:underline'
+								onClick={() => handleLogout()}
+							>
+								Logout
+							</span>
 						</>
 					) : (
 						<></>
