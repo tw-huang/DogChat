@@ -1,0 +1,27 @@
+.msg-box-img{
+    position: relative;
+    cursor: pointer;
+}
+.msg-box-img .popUp-box{
+    width: 20rem;
+    position: absolute;
+    left: 4rem;
+    top: -10px;
+    display: none;
+    border: 1px solid #ccc;
+}
+.msg-box-img:hover .popUp-box{
+    display: flex;
+}
+.msg-box-img .popUp-box::before{
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    transform:translateY(-50%) rotateZ(45deg);
+    border: 1px solid transparent;
+    border-color: transparent transparent #ccc #ccc;
+    background-color: #f3f4f6;
+}

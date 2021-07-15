@@ -54,7 +54,7 @@ const Login: React.FC = () => {
 					<div className='flex flex-col mb-2'>
 						<label className='text-sm mb-1'>邮箱</label>
 						<input
-							className='border-2 rounded w-64 p-1'
+							className='border-2 rounded w-64 py-1 px-2'
 							type='text'
 							name='email'
 							value={email}
@@ -64,7 +64,7 @@ const Login: React.FC = () => {
 					<div className='flex flex-col mb-2'>
 						<label className='text-sm mb-1'>密码</label>
 						<input
-							className='border-2 rounded w-64 p-1'
+							className='border-2 rounded w-64 py-1 px-2'
 							type='password'
 							name='password'
 							value={password}
@@ -72,7 +72,7 @@ const Login: React.FC = () => {
 						/>
 					</div>
 					<div className='flex flex-col mt-6'>
-						<button className='bg-gray-800 text-white rounded py-1 px-2'>
+						<button className='bg-gray-800 text-white rounded py-1 px-2 hover:bg-gray-900'>
 							登 录
 						</button>
 					</div>
@@ -81,7 +81,7 @@ const Login: React.FC = () => {
 					<span className='text-sm'>
 						tips: 未有帐号？点击
 						<Link to='/register'>
-							<span className='hover:text-gray-900 hover:underline'>这里</span>
+							<span className='hover:text-gray-900 hover:underline'> 这里 </span>
 						</Link>
 						注册
 					</span>

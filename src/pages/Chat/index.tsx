@@ -9,22 +9,22 @@ import './index.style.css'
 import { Link } from 'react-router-dom'
 
 interface MsgItem {
-	body: string,
-	id: number,
-	pushTime: string,
-	quoteMessage: object,
-	quoteMessageId: number,
+	body: string
+	id: number
+	pushTime: string
+	quoteMessage: object
+	quoteMessageId: number
 	user: User
 }
 
 interface User {
-	id: number,
-	about: string,
-	avatar: string,
-	email: string,
-	github: string,
-	nickname: string,
-	website: string,
+	id: number
+	about: string
+	avatar: string
+	email: string
+	github: string
+	nickname: string
+	website: string
 }
 
 const Chat: React.FC = () => {
@@ -36,28 +36,32 @@ const Chat: React.FC = () => {
 	const [msgInput, setMsgInput] = useState<string>('')
 	const [ws, setWs] = useState(null)
 	//消息列表
-	const [pageSize] = useState<number>(12)
+	const pageNo = useRef(1) 
+	const [pageSize] = useState<number>(20)
 	const [msgList, setMsgList] = useState<Array<MsgItem>>([])
 	//是否还有数据
 	const [hasMsg, setHasMsg] = useState<boolean>(true)
-	const pageNo = useRef(1);
 
 	const [isLoading, setIsLoading] = useState(false);
 
 	const msgBoxRef = useRef(null)
 
-	// 获取列表数据
-	const getList = (val: number) => {
-		getMessage(val, pageSize).then(res => {
-			const { success, code, data } = res;
+	//获取消息数据时的时间戳
+	const dateTime = new Date().getTime().toString()
+
+	// 获取消息列表数据
+	const getMsgList = (val: number) => {
+		getMessage(dateTime, val, pageSize).then((res) => {
+			const { success, code, data } = res
 			if (success && code === 1) {
-				if (val > data.pages) return setHasMsg(false);
-				const newData = data?.records.reverse();
-				setMsgList(p => newData.concat(p));
+				if (val > data.pages) return setHasMsg(false)
+				const newData = data?.records.reverse()
+				setMsgList((p) => newData.concat(p))
+				// @ts-ignore
+				msgBoxRef.current.scrollTop = msgBoxRef.current.offsetHeight
 			}
 		})
 	}
-
 
 	// 连接socket
 	const connectSocket = () => {
@@ -89,14 +93,13 @@ const Chat: React.FC = () => {
 						if (json.msg === 'ReceiveMessage') {
 							// console.log('ReceiveMessage')
 							// console.log(json.data)
-							setMsgList(list => [...list, json.data])
+							setMsgList((list) => [...list, json.data])
 							const msgBoxId = document.getElementById('msgBox')
 							if (msgBoxId != null) {
 								msgBoxId.scrollTop = msgBoxId.scrollHeight
 							}
 						}
 					}
-
 				}
 				ws.onclose = function () {
 					// console.log('ws_onclose')
@@ -110,15 +113,12 @@ const Chat: React.FC = () => {
 	}
 
 	//获取在线人数和注册人数
-	const fetchData = async () => {
+	const getHeaderData = async () => {
 		// @ts-ignore
 		let res = await getHeaderInfo()
-		// console.log(res)
-		if (res?.success) {
-			if (res.code === 1) {
-				setOnlineCount(res.data.onlineCount)
-				setRegisterCount(res.data.registerCount)
-			}
+		if (res?.success && res.code === 1) {
+			setOnlineCount(res.data.onlineCount)
+			setRegisterCount(res.data.registerCount)
 		}
 	}
 
@@ -126,7 +126,7 @@ const Chat: React.FC = () => {
 	const handleMsgSend = () => {
 		if (ws != null) {
 			const json = {
-				body: msgInput
+				body: msgInput,
 			}
 			// @ts-ignore
 			ws.send(JSON.stringify(json))
@@ -136,22 +136,17 @@ const Chat: React.FC = () => {
 
 	const getScrollData = () => {
 		// @ts-ignore
-		const scrollTop = msgBoxRef.current.scrollTop;
+		const scrollTop = msgBoxRef.current.scrollTop
 		if (scrollTop === 0 && hasMsg) {
-			// @ts-ignore
-			msgBoxRef.current.scrollTop = 50
-			getList(++pageNo.current);
+			getMsgList(++pageNo.current)
 		}
 	}
 
 	useEffect(() => {
-
-		fetchData();
-		connectSocket();
-		getList(1);
-		// @ts-ignore
-		msgBoxRef.current.scrollTop = msgBoxRef.current.offsetHeight;
-		setIsLoading(p => !p);
+		getHeaderData()
+		connectSocket()
+		getMsgList(1)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	useEffect(() => {
@@ -159,50 +154,94 @@ const Chat: React.FC = () => {
 		msgBoxRef.current?.addEventListener('scroll', getScrollData)
 		return () => {
 			// @ts-ignore
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 			msgBoxRef.current?.removeEventListener('scroll', getScrollData)
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [hasMsg])
+
+	const handleLogout = () => {
+		if (isLogin) {
+			localStorage.removeItem('Token')
+			setIsLogin(false)
+		}
+	}
 
 	return (
 		<>
-			<div className="flex justify-between px-6 w-screen h-12 fixed bg-yellow-100">
-				<div className="flex items-center">
+			<div className='flex justify-between px-6 w-screen h-12 fixed border-b-2 border-gray-300 '>
+				<div className='flex items-center'>
 					<img className='w-8 mr-1' src={logo} alt='logo' />
-					<span className="pl-3">DogChat</span>
-					<span className="px-3">{onlineCount}/{registerCount}</span>
-					<span>About</span>
+					<span className='pl-3'>DogChat</span>
+					<span className='px-3'>
+						{onlineCount}/{registerCount}
+					</span>
+					<Link to='/about'>
+						<span className='hover:text-gray-900 hover:underline'>About</span>
+					</Link>
 				</div>
-				<div className="flex items-center">
-					<span className="pr-3">Profile</span>
-					<span>Logout</span>
+				<div className='flex items-center'>
+					{isLogin ? (
+						<>
+							<span className='pr-3'>
+								<Link to='/profile'>
+									<span className='hover:text-gray-900 hover:underline'>
+										Profile
+									</span>
+								</Link>
+							</span>
+							<span
+								className='hover:text-gray-900 hover:underline'
+								onClick={() => handleLogout()}
+							>
+								Logout
+							</span>
+						</>
+					) : (
+						<></>
+					)}
 				</div>
 			</div>
 			{/*信息列表*/}
-			<div className="pt-12 pb-20">
-				<div className="msgBox" id="msgBox" ref={msgBoxRef}>
+			<div className='pt-12 pb-20'>
+				<div className='msgBox' id='msgBox' ref={msgBoxRef}>
 					<MsgBox msgList={msgList} />
 				</div>
 			</div>
 			{/**/}
-			<div className='flex items-center px-6 w-screen fixed bottom-0 left-0 h-20 bg-yellow-100'>
+			<div className='flex items-center px-6 w-screen fixed bottom-0 left-0 h-20 border-t-2 border-gray-300'>
 				{isLogin ? (
 					<>
 						<img className='w-14 mr-3' src={user} alt='avatar' />
-						<input value={msgInput || ''}
-							onChange={(event) => setMsgInput(event.target.value)} type="text"
-							className="w-4/12 h-14 mr-3" />
-						<button className="bg-gray-800 text-white rounded py-1 px-2" onClick={handleMsgSend}>发 送
+						<input
+							value={msgInput || ''}
+							onChange={(event) => setMsgInput(event.target.value)}
+							type='text'
+							className='border-2 border-gray-100 w-4/12 h-14 mr-3 px-3'
+						/>
+						<button
+							className='bg-gray-800 text-white rounded py-1 px-2'
+							onClick={handleMsgSend}
+						>
+							发 送
 						</button>
 					</>
 				) : (
 					<>
-						<div>Hello! 请先
+						<div>
+							Hello! 请先
 							<Link to='/login'>
-								<span className='hover:text-gray-900 hover:underline'> 登录 </span>
+								<span className='hover:text-gray-900 hover:underline'>
+									{' '}
+									登录{' '}
+								</span>
 							</Link>
 							或者
 							<Link to='/register'>
-								<span className='hover:text-gray-900 hover:underline'> 注册 </span>
+								<span className='hover:text-gray-900 hover:underline'>
+									{' '}
+									注册{' '}
+								</span>
 							</Link>
 							帐号，再来愉快的聊天吧~
 						</div>
