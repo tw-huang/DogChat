@@ -41,7 +41,7 @@ const Chat: React.FC = () => {
 	const [msgList, setMsgList] = useState<Array<MsgItem>>([])
 	//是否还有数据
 	const [hasMsg, setHasMsg] = useState<boolean>(true)
-	const [isLoading, setIsLoading] = useState(false)
+
 	const msgBoxRef = useRef(null)
 
 	//获取消息数据时的时间戳
@@ -144,7 +144,6 @@ const Chat: React.FC = () => {
 		getHeaderData()
 		connectSocket()
 		getMsgList(1)
-		setIsLoading((p) => !p)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 

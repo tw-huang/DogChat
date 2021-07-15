@@ -20,6 +20,7 @@ const About: React.FC = () => {
 					href='https://github.com/tw-huang/dogchat-react'
 					className='hover:text-gray-900 hover:underline'
 					target="_blank"
+					rel="noopener noreferrer"
 				>
 					开源地址
 				</a>
