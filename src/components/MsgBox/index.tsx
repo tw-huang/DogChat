@@ -30,7 +30,7 @@ const MsgBox: React.FC<Props> = (props) => {
 
 	const msgItem = msgList.map((msg: MsgItem) => {
 		return (
-			<div className='px-6 msg-box flex mt-5' key={msg.id}>
+			<div className='px-6 msg-box flex my-5' key={msg.id}>
 				<div className='msg-box-img flex'>
 					<img className='w-14 h-14 mr-3 ' src={user} alt='avatar'/>
 					<div className='flex flex-col bg-gray-100 p-3 popUp-box'>
