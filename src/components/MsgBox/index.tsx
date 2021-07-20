@@ -30,8 +30,8 @@ const MsgBox: React.FC<Props> = (props) => {
 
 	const msgItem = msgList.map((msg: MsgItem) => {
 		return (
-			<div className='px-6 msg-box flex mt-4' key={msg.id}>
-				<div className='msg-box-img flex py-2'>
+			<div className='px-6 msg-box flex mt-5' key={msg.id}>
+				<div className='msg-box-img flex'>
 					<img className='w-14 h-14 mr-3 ' src={user} alt='avatar'/>
 					<div className='flex flex-col bg-gray-100 p-3 popUp-box'>
 						<span>email: {msg.user.email}</span>
@@ -39,12 +39,12 @@ const MsgBox: React.FC<Props> = (props) => {
 						<span>website: {msg.user.website}</span>
 					</div>
 				</div>
-				<div className='flex flex-col bg-gray-100 p-3 mr-3'>
+				<div className='flex flex-col bg-gray-200 p-3 mr-3'>
 					<div className='flex items-center text-xs'>
 						{msg.user?.nickname || ''}
 						<span className='font-light pl-2'>{msg.pushTime}</span>
 					</div>
-					<span className='text-xl'>{msg.body}</span>
+					<span className='mt-2'>{msg.body}</span>
 				</div>
 			</div>
 		)
