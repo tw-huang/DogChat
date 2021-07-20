@@ -42,8 +42,6 @@ const Chat: React.FC = () => {
 	//是否还有数据
 	const [hasMsg, setHasMsg] = useState<boolean>(true)
 
-	const [isLoading, setIsLoading] = useState(false);
-
 	const msgBoxRef = useRef(null)
 
 	//获取消息数据时的时间戳

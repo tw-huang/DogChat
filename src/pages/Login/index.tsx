@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 // @ts-ignore
-import { Link } from 'react-router-dom'
 // @ts-ignore
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import logo from '../../assets/logo.png'
 import { signIn } from '../../services'
 import WarnMsg from '../../components/WarnMsg'
@@ -19,23 +18,37 @@ const Login: React.FC = () => {
 
 	const history = useHistory()
 
-	const printValues = (e: { preventDefault: () => void }) => {
-		e.preventDefault()
-		const fetchData = async () => {
-			let res = await signIn(email, password)
-			console.log(res)
-			if (res?.success) {
-				if (res.code === 1) {
-					localStorage.setExpire('Token', res.data.token, expireToken)
-					history.push('/')
-					return
-				}
-				setWarnState(true)
-				setWarnContent(res?.msg)
+	const fetchData = async () => {
+		let res = await signIn(email, password)
+		console.log(res)
+		if (res?.success) {
+			if (res.code === 1) {
+				localStorage.setExpire('Token', res.data.token, expireToken)
+				history.push('/')
 				return
 			}
 			setWarnState(true)
-			setWarnContent('网络错误')
+			setWarnContent(res?.msg)
+			return
+		}
+		setWarnState(true)
+		setWarnContent('网络错误')
+	}
+
+	const printValues = (e: { preventDefault: () => void }) => {
+		e.preventDefault()
+		//表单参数检验
+		const regExp =
+			/^([a-zA-Z0-9]+[_|_|.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|_|.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/
+		if (email === '' || !regExp.test(email)) {
+			setWarnState(true)
+			setWarnContent('邮箱不能为空，且输入正确的邮箱格式')
+			return
+		}
+		if (password === '' || password.length < 6 || password.length > 20) {
+			setWarnState(true)
+			setWarnContent('密码不能为空，且长度必须在6-20位')
+			return
 		}
 		//异步请求数据
 		fetchData()
@@ -81,7 +94,10 @@ const Login: React.FC = () => {
 					<span className='text-sm'>
 						tips: 未有帐号？点击
 						<Link to='/register'>
-							<span className='hover:text-gray-900 hover:underline'> 这里 </span>
+							<span className='hover:text-gray-900 hover:underline'>
+								{' '}
+								这里{' '}
+							</span>
 						</Link>
 						注册
 					</span>

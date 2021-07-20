@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 // @ts-ignore
-import { Link } from 'react-router-dom'
 // @ts-ignore
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import logo from '../../assets/logo.png'
 import { signUp } from '../../services'
 import WarnMsg from '../../components/WarnMsg'
@@ -20,27 +19,51 @@ const Register: React.FC = () => {
 
 	const history = useHistory()
 
+	const fetchData = async () => {
+		let res = await signUp(nickname, email, password)
+		if (res?.success) {
+			if (res.code === 1) {
+				history.push('/login')
+				return
+			}
+			setWarnState(true)
+			setWarnContent(res?.msg)
+			return
+		}
+		setWarnState(true)
+		setWarnContent('网络错误')
+	}
+
 	const printValues = (e: { preventDefault: () => void }) => {
 		e.preventDefault()
+		//表单参数检验
+		const regExp =
+			/^([a-zA-Z0-9]+[_|_|.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|_|.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/
+
+		if (nickname === '' || nickname.length > 20) {
+			setWarnState(true)
+			setWarnContent('昵称不能为空，且不能超过20个字符')
+			return
+		}
+		if (email === '' || !regExp.test(email)) {
+			setWarnState(true)
+			setWarnContent('邮箱不能为空，且输入正确的邮箱格式')
+			return
+		}
+		if (password === '' || password.length < 6 || password.length > 20) {
+			setWarnState(true)
+			setWarnContent('密码不能为空，且长度必须在6-20位')
+			return
+		}
+		if (password2 === '' || password2.length < 6 || password2.length > 20) {
+			setWarnState(true)
+			setWarnContent('重复密码不能为空，且长度必须在6-20位')
+			return
+		}
 		if (password !== password2) {
 			setWarnState(true)
 			setWarnContent('两次输入密码不一样')
 			return
-		}
-		const fetchData = async () => {
-			let res = await signUp(nickname, email, password)
-			console.log(res)
-			if (res?.success) {
-				if (res.code === 1) {
-					history.push('/login')
-					return
-				}
-				setWarnState(true)
-				setWarnContent(res?.msg)
-				return
-			}
-			setWarnState(true)
-			setWarnContent('网络错误')
 		}
 		//异步请求数据
 		fetchData()
