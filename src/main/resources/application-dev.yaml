@@ -21,7 +21,7 @@ spring:
     host: 106.53.155.82
     password: breakblog
     port: 6379
-    database: 3
+    database: 1
     timeout: 5000
     lettuce:
       pool:
