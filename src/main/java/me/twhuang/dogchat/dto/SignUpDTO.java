@@ -2,6 +2,7 @@ package me.twhuang.dogchat.dto;
 
 import lombok.Data;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -17,6 +18,7 @@ public class SignUpDTO {
     private String password;
 
     @NotEmpty(message = "邮件地址不能为空")
+    @Email(message = "请输入正常邮箱地址")
     private String email;
 
 }
