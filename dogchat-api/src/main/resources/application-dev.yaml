@@ -37,8 +37,8 @@ spring:
       max-request-size: 100MB
 
 mybatis-plus:
-  mapper-locations: classpath*:me/twhuang/dogchat/mapper/xml/*Mapper.xml
-  type-aliases-package: me.twhuang.dogchat.entity
+  mapper-locations: classpath*:top/twhuang/dogchat/mapper/xml/*Mapper.xml
+  type-aliases-package: top.twhuang.dogchat.entity
   global-config:
     banner: false
   configuration:
