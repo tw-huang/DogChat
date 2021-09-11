@@ -36,7 +36,7 @@ const Chat: React.FC = () => {
 	const [msgInput, setMsgInput] = useState<string>('')
 	const [ws, setWs] = useState(null)
 	//消息列表
-	const pageNo = useRef(1) 
+	const pageNo = useRef(1)
 	const [pageSize] = useState<number>(20)
 	const [msgList, setMsgList] = useState<Array<MsgItem>>([])
 	//是否还有数据
@@ -50,13 +50,17 @@ const Chat: React.FC = () => {
 	// 获取消息列表数据
 	const getMsgList = (val: number) => {
 		getMessage(dateTime, val, pageSize).then((res) => {
-			const { success, code, data } = res
-			if (success && code === 1) {
-				if (val > data.pages) return setHasMsg(false)
-				const newData = data?.records.reverse()
-				setMsgList((p) => newData.concat(p))
-				// @ts-ignore
-				msgBoxRef.current.scrollTop = msgBoxRef.current.offsetHeight
+			try {
+				const { success, code, data } = res
+				if (success && code === 1) {
+					if (val > data.pages) return setHasMsg(false)
+					const newData = data.records.reverse()
+					setMsgList((p) => newData.concat(p))
+					// @ts-ignore
+					msgBoxRef.current.scrollTop = msgBoxRef.current.offsetHeight
+				}
+			} catch (e) {
+				console.log(e)
 			}
 		})
 	}

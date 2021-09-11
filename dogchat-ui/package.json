@@ -1,8 +1,7 @@
 {
-  "name": "dogchat-react",
+  "name": "dogchat",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/dogchat/",
   "dependencies": {
     "@craco/craco": "^6.1.2",
     "@tailwindcss/postcss7-compat": "^2.1.2",
